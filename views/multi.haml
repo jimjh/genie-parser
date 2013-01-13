@@ -1,0 +1,16 @@
+-# coding: UTF-8
+%form.problem{action: 'verify/problem/' + id, 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
+  %fieldset
+
+    %legend Problem #{index}
+    %p= question
+
+    .row.collapse
+      .ten.mobile-three.columns
+        -options.each do |value, label|
+          %label{for: 'answer'}
+            %input{name: 'answer', type: 'radio', value: value}
+              = label
+      .two.mobile-one.columns
+        %a.button.submit.small.expand.postfix.radius{href: '#'} Submit
+

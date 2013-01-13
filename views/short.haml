@@ -1,0 +1,12 @@
+-# coding: UTF-8
+%form.problem{action: 'verify/problem/' + id, 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
+  %fieldset
+
+    %legend Problem #{index}
+    %p= question
+
+    .row.collapse
+      .ten.mobile-three.columns
+        %input{name: 'answer', type: 'text'}
+      .two.mobile-one.columns
+        %a.button.small.submit.expand.postfix.radius{href: '#'} Submit

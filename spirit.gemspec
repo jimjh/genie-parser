@@ -20,7 +20,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = %w[lib]
   gem.files         = %w[LICENSE README.md] +
                       Dir.glob('lib/**/*.rb') +
-                      Dir.glob('bin/**/*')
+                      Dir.glob('bin/**/*') +
+                      Dir.glob('views/**/*')
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
 
@@ -28,6 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'redcarpet',     '~> 2.2'
   gem.add_dependency 'albino',        '~> 1.3'
   gem.add_dependency 'sanitize',      '~> 2.0.3'
+  gem.add_dependency 'htmlentities' # TODO: remove
   gem.add_dependency 'activesupport', '~> 3.2.9'
 
   gem.add_development_dependency 'yard',         '~> 0.8.3'

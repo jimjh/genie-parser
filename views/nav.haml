@@ -1,0 +1,5 @@
+-# coding: UTF-8
+%dl#sections.sub-nav{'data-magellan-expedition' => 'fixed'}
+  -sections.each do |name, heading|
+    %dd{'data-magellan-arrival' => name}
+      %a{href: '#' + name}= heading
