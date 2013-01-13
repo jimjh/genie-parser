@@ -20,6 +20,6 @@ Or install it yourself as:
 
 ## Usage
 
-The only public api methods are `parse_document` and `parse_manifest`, which
-parse lesson documents and manifests respectively. `Spirit::Error` exceptions
-are raised if the input is invalid.
+### Parsing a document
+
+  Spirit::Document.new(data, opts).render //=> rendered html

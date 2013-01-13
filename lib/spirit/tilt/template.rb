@@ -6,22 +6,22 @@ module Spirit
 
   module Tilt
 
-    # Template adapter for Tilt
+    # Template adapter for Tilt. This class depends on the tilt gem.
     class Template < ::Tilt::Template
 
       self.default_mime_type = 'text/html'
 
       def self.engine_initialized?
-        defined? Spirit::Render
+        defined? Spirit::Render and defined? Spirit::Render::HTML
       end
 
       def prepare
+        @engine = Spirit::Document.new data, options
         @output = nil
       end
 
       def evaluate(scope, locals, &block)
-        output, _ = Spirit.parse_document data, nil, options
-        @output ||= output
+        @output ||= @engine.render
       end
 
       def allows_script?

@@ -1,4 +1,6 @@
 # ~*~ encoding: utf-8 ~*~
+require 'tmpdir'
+
 module Spirit
 
   # Path to templates
@@ -16,5 +18,8 @@ module Spirit
 
   SOLUTION_DIR = Dir.tmpdir
   SOLUTION_EXT = '.sol'
+
+  # Name of index page.
+  INDEX_MD     = 'index.md'
 
 end
