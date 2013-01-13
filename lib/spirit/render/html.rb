@@ -2,6 +2,7 @@
 require 'spirit/render/errors'
 require 'spirit/render/sanitize'
 require 'spirit/render/templates'
+require 'json'
 
 module Spirit
 

@@ -23,3 +23,7 @@ Or install it yourself as:
 ### Parsing a document
 
   Spirit::Document.new(data, opts).render //=> rendered html
+
+### Parsing a manifest
+
+  Spirit::Manifest.new(data, opts) //=> configuration object

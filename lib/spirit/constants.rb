@@ -20,6 +20,9 @@ module Spirit
   SOLUTION_EXT = '.sol'
 
   # Name of index page.
-  INDEX_MD     = 'index.md'
+  INDEX     = 'index.md'
+
+  # Name of manifest file.
+  MANIFEST  = 'manifest.yml'
 
 end

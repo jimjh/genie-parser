@@ -5,4 +5,8 @@ module Spirit
   # to continue.
   class Error < StandardError; end
 
+  class DocumentError < Error; end
+
+  class ManifestError < Error; end
+
 end

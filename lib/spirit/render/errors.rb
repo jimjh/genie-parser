@@ -4,7 +4,7 @@ module Spirit
   module Render
 
     # The base exception for {Spirit::Render} errors.
-    class Error < StandardError; end
+    class Error < DocumentError; end
 
   end
 

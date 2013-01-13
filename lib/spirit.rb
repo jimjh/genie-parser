@@ -1,7 +1,9 @@
 # ~*~ encoding: utf-8 ~*~
 require 'spirit/logger'
 require 'spirit/constants'
+require 'spirit/errors'
 require 'spirit/document'
+require 'spirit/manifest'
 
 module Spirit
   extend self
@@ -13,14 +15,6 @@ module Spirit
   # location than +STDOUT+.
   def initialize_logger(output=STDOUT, *args)
     @logger = Logger.new output, *args
-  end
-
-  # Parses the given manifest. It should contain a valid lesson manifest.
-  # @param [Object] source  may be either an instance of +IO+ or an object that responds
-  #                         to +to_str+.
-  # @return [Hash] manifest
-  def parse_manifest(source)
-    # TODO
   end
 
   initialize_logger
