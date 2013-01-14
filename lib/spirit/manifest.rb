@@ -20,27 +20,36 @@ module Spirit
     # Creates a new configuration hash from the given source.
     def initialize(hash)
       super nil
+      hash ||= {}
+      bad_file(hash.class) unless hash.is_a? Hash
       merge! hash.symbolize_keys
       check_types
     end
 
     # Load configuration from given string.
     # @param [String] source
+    # @return [Manifest] manifest
     def self.load(source)
       new YAML.load source
+    rescue Psych::SyntaxError => e
+      raise ManifestError, e.message
     end
 
     # Load configuration from given yaml file.
     # @param [String] path
+    # @return [Manifest] manifest
     def self.load_file(path)
-      new YAML.load_file path
+      File.open(path, 'r:utf-8') { |f| new YAML.load f.read }
+    rescue Psych::SyntaxError => e
+      raise ManifestError, e.message
     end
 
     private_class_method :new
 
     private
 
-    # Checks that the given hash has the valid types for each value.
+    # Checks that the given hash has the valid types for each value, if they
+    # exist.
     # @raise [ManifestError] if a bad type is encountered.
     def check_types(key='root', expected=TYPES, actual=self)
       bad_type(key, expected, actual) unless actual.is_a? expected.class
@@ -50,8 +59,15 @@ module Spirit
       end
     end
 
+    def bad_file(type)
+      raise ManifestError, <<-eos.squish
+        The manifest file should contain a dictionary, but a #{type.name} was
+        found.
+      eos
+    end
+
     def bad_type(key, expected, actual)
-      raise ManifestError.new <<-eos.squish
+      raise ManifestError, <<-eos.squish
         The #{key} option in the manifest file should be a #{expected.class.name}
         instead of a #{actual.class.name}.
       eos
