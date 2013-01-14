@@ -34,9 +34,4 @@ describe Spirit do
 
   end
 
-  describe '::parse_manifest' do
-    it 'parses the given manifest'
-    it 'raises Spirit::Error if the manifest is invalid'
-  end
-
 end

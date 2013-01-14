@@ -31,7 +31,7 @@ module Spirit
     # @return [Manifest] manifest
     def self.load(source)
       new YAML.load source
-    rescue Psych::SyntaxError => e
+    rescue ::Psych::SyntaxError => e
       raise ManifestError, e.message
     end
 
@@ -40,7 +40,7 @@ module Spirit
     # @return [Manifest] manifest
     def self.load_file(path)
       File.open(path, 'r:utf-8') { |f| new YAML.load f.read }
-    rescue Psych::SyntaxError => e
+    rescue ::Psych::SyntaxError => e
       raise ManifestError, e.message
     end
 
@@ -51,11 +51,11 @@ module Spirit
     # Checks that the given hash has the valid types for each value, if they
     # exist.
     # @raise [ManifestError] if a bad type is encountered.
-    def check_types(key='root', expected=TYPES, actual=self)
-      bad_type(key, expected, actual) unless actual.is_a? expected.class
+    def check_types(key='root', expected=TYPES, actual=self, opts={})
+      bad_type(key, expected, actual, opts) unless actual.is_a? expected.class
       case actual
       when Hash then actual.each { |k, v| check_types(k, expected[k], v) }
-      when Enumerable then actual.each { |v| check_types(key, expected.first, v) }
+      when Enumerable then actual.each { |v| check_types(key, expected.first, v, enum: true) }
       end
     end
 
@@ -66,9 +66,10 @@ module Spirit
       eos
     end
 
-    def bad_type(key, expected, actual)
+    def bad_type(key, expected, actual, opts={})
+      verb = opts[:enum] ? 'contain' : 'be'
       raise ManifestError, <<-eos.squish
-        The #{key} option in the manifest file should be a #{expected.class.name}
+        The #{key} option in the manifest file should #{verb} a #{expected.class.name}
         instead of a #{actual.class.name}.
       eos
     end

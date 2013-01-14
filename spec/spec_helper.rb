@@ -10,8 +10,13 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
+require 'factory_girl'
+require 'faker'
+
 module Test
   ROOT = Pathname.new File.dirname(__FILE__)
 end
 
 $:.unshift Test::ROOT + '..' + 'lib'
+require 'spirit'
+FactoryGirl.find_definitions
