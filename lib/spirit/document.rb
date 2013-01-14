@@ -1,4 +1,6 @@
 # ~*~ encoding: utf-8 ~*~
+require 'spirit/constants'
+require 'spirit/errors'
 require 'spirit/render'
 
 module Spirit
@@ -11,13 +13,16 @@ module Spirit
 
     # Creates a new document from the given source. It should contain valid
     # markdown + embedded YAML.
-    # @param [IO, #to_str] source
-    # @param [Hash]        opts         options for {::Redcarpet}
+    # @param [#read, #to_str] source
+    # @param [Hash] opts         options for {::Redcarpet}
     def initialize(source, opts={})
       opts = MARKDOWN_EXTENSIONS.merge opts
       rndr = Render::HTML.new
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
-      @data   = (IO === source) ? source.read : source.to_str
+      @data   = case
+                when source.respond_to?(:to_str) then source.to_str
+                when source.respond_to?(:read) then source.read
+                else nil end
     end
 
     # @return [Boolean] true iff if was a clean parse with no errors.
@@ -31,13 +36,13 @@ module Spirit
     # sanitization.
     #
     # @param [IO] anIO  if given, the HTML partial will be written to it.
-    # @return [String]  if +anIO+ was not provided
+    # @return [String]  if +anIO+ was not provided, returns the HTML string.
     # @return [Fixnum]  if +anIO+ was provided, returns the number of bytes
     #                   written.
     # @raise [Spirit::Error] if a fatal error is encountered.
     def render(anIO=nil)
       output = engine.render(data)
-      return IO.write output unless IO.nil?
+      return anIO.write(output) unless anIO.nil?
       output
     end
 

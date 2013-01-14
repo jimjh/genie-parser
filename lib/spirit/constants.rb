@@ -13,7 +13,6 @@ module Spirit
     fenced_code_blocks: true,
     autolink:           true,
     strikethrough:      true,
-    tables:             true,
   }
 
   SOLUTION_DIR = Dir.tmpdir
