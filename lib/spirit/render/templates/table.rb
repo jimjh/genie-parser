@@ -3,7 +3,7 @@ module Spirit
 
   module Render
 
-    # Renders table problems marked up in JSON as HTML.
+    # Renders table problems marked up in YAML as HTML.
     #
     # The grid should be given as a 2-dimensional array that represents the
     # table to be filled in. +"?"+ is a special token used in the grid to
@@ -37,13 +37,13 @@ module Spirit
       accessor HEADINGS, GRID
 
       # Ensures that the +headings+ key exists.
-      def initialize(json)
-        json[HEADINGS] ||= nil
+      def initialize(yaml)
+        yaml[HEADINGS] ||= nil
         super
       end
 
-      # Checks if the given json contains a valid table.
-      # @return [Boolean] true iff the json contains a valid table.
+      # Checks if the given yaml contains a valid table.
+      # @return [Boolean] true iff the yaml contains a valid table.
       def valid?
         super and
           valid_grid? and
@@ -73,7 +73,7 @@ module Spirit
       #
       # @return [Hash] answers
       def encode_answer
-        encoded, ans = {}, @json[ANSWER]
+        encoded, ans = {}, @yaml[ANSWER]
         grid.each_with_index do |row, i|
           row.each_with_index do |cell, j|
             next unless Table.input? cell
@@ -84,15 +84,15 @@ module Spirit
         encoded
       end
 
-      # @return [Boolean] true iff the json contains a valid grid.
+      # @return [Boolean] true iff the yaml contains a valid grid.
       def valid_grid?
-        @json.has_key? GRID and is_2d_array? grid
+        @yaml.has_key? GRID and is_2d_array? grid
       end
 
       # @return [Boolean] true iff +answer+ is a valid 2D array and has the
       # same number of rows as +grid+.
       def valid_answer?
-        ans = @json[ANSWER]
+        ans = @yaml[ANSWER]
         is_2d_array? ans and ans.size == grid.size
       end
 
