@@ -54,7 +54,7 @@ module Spirit
       end
 
       # Detects problem blocks and image blocks.
-      # @param [String] rendered html
+      # @return [String] rendered html
       def paragraph(text)
         case text
         when PROBLEM_REGEX then problem(text)
@@ -103,7 +103,7 @@ module Spirit
 
       # Prepares a block image. Raises {RenderError} if the given text does not
       # contain a valid image block.
-      # @param  [String] markdown
+      # @param  [String] text         markdown text
       # @return [String] rendered HTML
       def block_image(text)
         Image.parse(text).render(index: @img += 1)

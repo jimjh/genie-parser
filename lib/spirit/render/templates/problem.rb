@@ -27,7 +27,7 @@ module Spirit
 
         # Parses the given text for questions and answers. If the given text
         # does not contain valid JSON or does not contain the format key, raises
-        # an {Spirit::Render::ParseError}.
+        # an {Spirit::Render::RenderError}.
         # @param [String] text          markdown text
         def parse(text)
           json = JSON.parse text
