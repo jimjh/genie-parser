@@ -3,33 +3,22 @@ require 'spec_helper'
 
 describe Spirit do
 
+  it { should respond_to :logger }
+
   describe '::initialize_logger' do
-    it 'sets the log output'
-  end
 
-  describe '::parse_document' do
+    context 'given a temporary file' do
 
-    shared_examples 'alternative problem template' do
-      it 'accepts and uses the given problem template class'
-    end
+      let(:tmp_file)   { Pathname.new(Dir.tmpdir) + SecureRandom.uuid }
+      let(:tmp_string) { Faker::Lorem.sentence }
+      before { Spirit.initialize_logger tmp_file }
+      after  { tmp_file.unlink }
 
-    shared_examples 'IO object' do
-      it 'writes the output to IO'
-    end
+      it 'sets the log output' do
+        Spirit.logger.info tmp_string
+        File.read(tmp_file).should match(/#{tmp_string}/)
+      end
 
-    context 'given a valid document' do
-      it 'parses the given document'
-      it 'returns true'
-      include_examples 'alternative problem template'
-    end
-
-    context 'given a parseable, invalid document' do
-      it 'returns false'
-      include_examples 'alternative problem template'
-    end
-
-    context 'given an unparseable document' do
-      it 'raises Spirit::Error'
     end
 
   end

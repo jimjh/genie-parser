@@ -12,6 +12,7 @@ end
 
 require 'factory_girl'
 require 'faker'
+require 'securerandom'
 
 module Test
   ROOT = Pathname.new File.dirname(__FILE__)

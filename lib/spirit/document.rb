@@ -4,22 +4,20 @@ require 'spirit/render'
 module Spirit
 
   # Document written in Genie Markup Language.
-  # @todo TODO deal with problem template
-  # @todo TODO IO
   # @todo TODO clean?
   class Document
 
     attr_accessor :data, :engine
 
     # Creates a new document from the given source. It should contain valid
-    # Genie Markup Language.
+    # markdown + embedded YAML.
     # @param [IO, #to_str] source
     # @param [Hash]        opts         options for {::Redcarpet}
     def initialize(source, opts={})
       opts = MARKDOWN_EXTENSIONS.merge opts
       rndr = Render::HTML.new
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
-      @data   = source # TODO
+      @data   = (IO === source) ? source.read : source.to_str
     end
 
     # @return [Boolean] true iff if was a clean parse with no errors.
@@ -34,10 +32,13 @@ module Spirit
     #
     # @param [IO] anIO  if given, the HTML partial will be written to it.
     # @return [String]  if +anIO+ was not provided
-    # @return [IO]      if +anIO+ was provided
+    # @return [Fixnum]  if +anIO+ was provided, returns the number of bytes
+    #                   written.
     # @raise [Spirit::Error] if a fatal error is encountered.
     def render(anIO=nil)
-      return engine.render(data)
+      output = engine.render(data)
+      return IO.write output unless IO.nil?
+      output
     end
 
   end
