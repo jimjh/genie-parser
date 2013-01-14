@@ -46,6 +46,7 @@ module Spirit
         #highlighted = Albino.colorize code, language
         language, _, _ = (marker || 'text').split ':'
         Albino.colorize code, language
+        # TODO
         #case type
         #when 'demo', 'test'
         #  executable id: id, raw: code, colored: highlighted
@@ -53,18 +54,19 @@ module Spirit
       end
 
       # Detects problem blocks and image blocks.
-      # @param [String] text      paragraph text
+      # @param [String] rendered html
       def paragraph(text)
         case text
         when PROBLEM_REGEX then problem(text)
         when IMAGE_REGEX then block_image(text)
         else p(text) end
-      rescue Error => e # fall back to paragraph
-        logger.warn e.message
+      rescue RenderError => e # fall back to paragraph
+        Spirit.logger.warn e.message
         p(text)
       end
 
       # Increases all header levels by one and keeps a navigation bar.
+      # @return [String] rendered html
       def header(text, level)
         html, name = h(text, level += 1)
         @nav.append(text, name) if level == 2
@@ -89,8 +91,8 @@ module Spirit
       #  opts[:colored] + @exe.render(Object.new, id: opts[:id], raw: opts[:raw])
       #end
 
-      # Prepares a problem form. Raises {RenderError} or {ParseError} if the
-      # given text does not contain valid json markup for a problem.
+      # Prepares a problem form. Raises {RenderError} if the given text does
+      # not contain valid json markup for a problem.
       # @param [String] json            JSON markup
       # @return [String] rendered HTML
       def problem(json)
@@ -99,8 +101,10 @@ module Spirit
         problem.save! and problem.render(index: @prob += 1)
       end
 
-      # Prepares a block image. Raises {RenderError} or {ParseError} if the
-      # given text does not contain a valid image block.
+      # Prepares a block image. Raises {RenderError} if the given text does not
+      # contain a valid image block.
+      # @param  [String] markdown
+      # @return [String] rendered HTML
       def block_image(text)
         Image.parse(text).render(index: @img += 1)
       end
@@ -115,7 +119,7 @@ module Spirit
 
       # Wraps the given text with paragraph tags.
       # @param [String] text            paragraph text
-      # @return [String] wrapped text
+      # @return [String] rendered html
       def p(text)
         '<p>' + text + '</p>'
       end

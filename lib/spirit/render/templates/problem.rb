@@ -33,10 +33,10 @@ module Spirit
           json = JSON.parse text
           if json.is_a?(Hash) and json.has_key?(FORMAT)
             get_instance(json)
-          else raise ParseError.new("Expected a JSON object containing the #{FORMAT} key.")
+          else raise RenderError, "Expected a JSON object containing the #{FORMAT} key."
           end
         rescue JSON::JSONError => e
-          raise ParseError.new(e.message)
+          raise RenderError, e.message
         end
 
         # Dynamically creates accessor methods for JSON values.
@@ -52,7 +52,7 @@ module Spirit
           raise NameError.new unless klass < Problem
           klass.new(json)
         rescue NameError
-          raise ParseError.new('Unrecognized format: %p' % json[FORMAT])
+          raise RenderError, 'Unrecognized format: %p' % json[FORMAT]
         end
 
       end

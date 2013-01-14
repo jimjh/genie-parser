@@ -35,7 +35,7 @@ module Spirit
 
       private
 
-      # Parses the given HTML, or raise {ParseError} if it is invalid.
+      # Parses the given HTML, or raise {RenderError} if it is invalid.
       def parse_or_raise
         frag = Nokogiri::HTML::DocumentFragment.parse(@html)
         if 1 == frag.children.count and
@@ -43,7 +43,7 @@ module Spirit
           node.is_a? Nokogiri::XML::Element and
           node.name == IMAGE_TAG
           @node = node
-        else raise ParseError.new 'Not really a block image.'
+        else raise RenderError, 'Not really a block image.'
         end
       end
 
