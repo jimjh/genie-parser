@@ -3,7 +3,7 @@ module Spirit
 
   module Render
 
-    # Renders short questions marked up in JSON as HTML.
+    # Renders short questions marked up in YAML as HTML.
     # @example
     #     {
     #       "format": "short",
@@ -15,11 +15,11 @@ module Spirit
       # Name of template file for rendering short answer questions.
       TEMPLATE = 'short.haml'
 
-      # Checks if the given json contains a valid MCQ.
-      # @return [Boolean] true iff the json contains a valid MCQ.
+      # Checks if the given yaml contains a valid MCQ.
+      # @return [Boolean] true iff the yaml contains a valid MCQ.
       def valid?
         super and
-          not @json[ANSWER].nil?
+          not @yaml[ANSWER].nil?
       end
 
     end

@@ -2,23 +2,24 @@
 require 'spirit/render/errors'
 require 'spirit/render/sanitize'
 require 'spirit/render/templates'
-require 'json'
 
 module Spirit
 
   module Render
 
     # HTML Renderer for Genie Markup Language, which is just GitHub Flavored
-    # Markdown with Embedded YAML for describing problems.
+    # Markdown with Embedded YAML for describing problems. Designed for use
+    # with Redcarpet.
+    # @see Spirit::Tilt::Template
     # @see http://github.github.com/github-flavored-markdown/
     class HTML < ::Redcarpet::Render::HTML
 
       @sanitize = Sanitize.new
       class << self; attr_reader :sanitize end
 
-      # Paragraphs that start and end with braces are treated as embedded YAML
+      # Paragraphs that start and end with '---' are treated as embedded YAML
       # and are parsed for questions/answers.
-      PROBLEM_REGEX = /\A\s*{.+\z/m
+      PROBLEM_REGEX = /^"""$(.*?)^"""$/m
 
       # Paragraphs that only contain images are rendered with {Spirit::Render::Image}.
       IMAGE_REGEX = /\A\s*<img[^<>]+>\s*\z/m
@@ -31,7 +32,7 @@ module Spirit
 
       # Creates a new HTML renderer.
       # @param [Hash] options        described in the RedCarpet documentation.
-      def initialize(options = {})
+      def initialize(options={})
         super CONFIGURATION.merge options
         @nav, @headers = Navigation.new, Headers.new
         @prob, @img = 0, 0 # indices for Problem #, Figure #
@@ -53,11 +54,10 @@ module Spirit
         #else highlighted end
       end
 
-      # Detects problem blocks and image blocks.
+      # Detects block images and renders them as such.
       # @return [String] rendered html
       def paragraph(text)
         case text
-        when PROBLEM_REGEX then problem(text)
         when IMAGE_REGEX then block_image(text)
         else p(text) end
       rescue RenderError => e # fall back to paragraph
@@ -73,8 +73,14 @@ module Spirit
         html
       end
 
+      # Runs a first pass through the document to look for problem blocks.
+      # @param [String] document    markdown document
+      def preprocess(document)
+        document.gsub(PROBLEM_REGEX) { |yaml| problem $1 }
+      end
+
       # Sanitizes the final document.
-      # @param [String] document    html document
+      # @param [String]  document    html document
       # @return [String] sanitized document
       def postprocess(document)
         HTML.sanitize.clean(@nav.render + document.force_encoding('utf-8'))
@@ -91,14 +97,16 @@ module Spirit
       #  opts[:colored] + @exe.render(Object.new, id: opts[:id], raw: opts[:raw])
       #end
 
-      # Prepares a problem form. Raises {RenderError} if the given text does
-      # not contain valid json markup for a problem.
-      # @param [String] json            JSON markup
+      # Prepares a problem form. Returns +yaml+ if the given text does not
+      # contain valid yaml markup for a problem.
+      # @param [String] yaml            YAML markup
       # @return [String] rendered HTML
-      def problem(json)
-        b = '\\' # unescape backslashes
-        problem = Problem.parse(HTMLEntities.new.decode(json).gsub(b, b * 4))
+      def problem(yaml)
+        problem = Problem.parse(yaml)
+        Spirit.logger.record :problem, "ID: #{problem.id}"
         problem.save! and problem.render(index: @prob += 1)
+      rescue RenderError
+        yaml
       end
 
       # Prepares a block image. Raises {RenderError} if the given text does not
