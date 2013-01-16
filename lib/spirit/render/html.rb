@@ -19,7 +19,7 @@ module Spirit
 
       # Paragraphs that start and end with '---' are treated as embedded YAML
       # and are parsed for questions/answers.
-      PROBLEM_REGEX = /^---$.*^---$/m
+      PROBLEM_REGEX = /^"""$(.*?)^"""$/m
 
       # Paragraphs that only contain images are rendered with {Spirit::Render::Image}.
       IMAGE_REGEX = /\A\s*<img[^<>]+>\s*\z/m
@@ -76,7 +76,7 @@ module Spirit
       # Runs a first pass through the document to look for problem blocks.
       # @param [String] document    markdown document
       def preprocess(document)
-        document.gsub PROBLEM_REGEX { |yaml| problem $1 }
+        document.gsub(PROBLEM_REGEX) { |yaml| problem $1 }
       end
 
       # Sanitizes the final document.
@@ -97,13 +97,16 @@ module Spirit
       #  opts[:colored] + @exe.render(Object.new, id: opts[:id], raw: opts[:raw])
       #end
 
-      # Prepares a problem form. Raises {RenderError} if the given text does
-      # not contain valid yaml markup for a problem.
+      # Prepares a problem form. Returns +yaml+ if the given text does not
+      # contain valid yaml markup for a problem.
       # @param [String] yaml            YAML markup
       # @return [String] rendered HTML
       def problem(yaml)
         problem = Problem.parse(yaml)
+        Spirit.logger.record :problem, "ID: #{problem.id}"
         problem.save! and problem.render(index: @prob += 1)
+      rescue RenderError
+        yaml
       end
 
       # Prepares a block image. Raises {RenderError} if the given text does not

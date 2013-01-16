@@ -33,7 +33,7 @@ module Spirit
           yaml = YAML.load text
           if yaml.is_a?(Hash) and yaml.has_key?(FORMAT)
             get_instance(yaml)
-          else raise RenderError, "Expected a YAML object containing the #{FORMAT} key."
+          else raise RenderError, "Expected a YAML dictionary containing the #{FORMAT} key."
           end
         rescue ::Psych::SyntaxError => e
           raise RenderError, e.message
