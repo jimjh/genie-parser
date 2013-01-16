@@ -3,7 +3,7 @@ module Spirit
 
   module Render
 
-    # Renders multiple choice questions marked up in JSON as HTML.
+    # Renders multiple choice questions marked up in YAML as HTML.
     # @example
     #
     #     {
@@ -17,20 +17,20 @@ module Spirit
     #     }
     class Multi < Problem
 
-      # Required key in JSON markup. Associated value should be a dictionary of
+      # Required key in YAML markup. Associated value should be a dictionary of
       # label -> choices.
       OPTIONS = 'options'
 
       # Name of template file for rendering multiple choice questions.
       TEMPLATE = 'multi.haml'
 
-      # Checks if the given json contains a valid MCQ.
-      # @return [Boolean] true iff the json contains a valid MCQ.
+      # Checks if the given yaml contains a valid MCQ.
+      # @return [Boolean] true iff the yaml contains a valid MCQ.
       def valid?
         super and
-          @json[ANSWER].is_a? String and
-          @json.has_key?(OPTIONS) and
-          @json[OPTIONS].is_a? Hash
+          @yaml[ANSWER].is_a? String and
+          @yaml.has_key?(OPTIONS) and
+          @yaml[OPTIONS].is_a? Hash
       end
 
     end

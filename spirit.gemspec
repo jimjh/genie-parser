@@ -29,7 +29,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'redcarpet',     '~> 2.2'
   gem.add_dependency 'albino',        '~> 1.3'
   gem.add_dependency 'sanitize',      '~> 2.0.3'
-  gem.add_dependency 'htmlentities' # TODO: remove
   gem.add_dependency 'activesupport', '~> 3.2.9'
 
   gem.add_development_dependency 'yard',         '~> 0.8.3'
