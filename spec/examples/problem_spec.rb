@@ -11,9 +11,8 @@ describe Spirit::Render::Problem do
     context 'given invalid YAML markup' do
 
       context 'that are not associative arrays' do
-        let(:inputs) { %w({xxx} [[?]] [["?"]]) }
-        it 'raises a RenderError' do
-          inputs.each do |input|
+        %w({xxx} [[?]] [["?"]]).each do |input|
+          it 'raises a RenderError' do
             expect { parse input }.to raise_error(Spirit::Render::RenderError)
           end
         end
@@ -39,18 +38,17 @@ describe Spirit::Render::Problem do
     end
 
     context 'given problems with valid formats in different cases' do
-      let(:formats) { %w(short Short SHORT) }
-      it 'does not raise a RenderError' do
-        formats.each do |format|
+      %w(short Short SHORT shORt).each do |format|
+        it 'does not raise a RenderError' do
           input = FactoryGirl.create(:short, format: format)
           expect { parse input }.to_not raise_error
         end
       end
     end
 
-    it 'returns a problem object' do
-      text = FactoryGirl.create(:short)
-      parse(text).should be_kind_of(Spirit::Render::Problem)
+    context 'given valid YAML markup' do
+      let(:input) { FactoryGirl.create(:short) }
+      it { should be_kind_of(Spirit::Render::Problem) }
     end
 
   end
