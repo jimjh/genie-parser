@@ -1,4 +1,5 @@
 # ~*~ encoding: utf-8 ~*~
+require 'spirit/constants'
 module Spirit
 
   module Render
@@ -23,18 +24,19 @@ module Spirit
       # Required keys.
       KEYS = [FORMAT, QUESTION, ANSWER]
 
+      # Stateless markdown renderer.
+      MARKDOWN = ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML, MARKDOWN_EXTENSIONS)
+
       class << self
 
         # Parses the given text for questions and answers. If the given text
         # does not contain valid YAML or does not contain the format key, raises
         # an {Spirit::Render::RenderError}.
-        # @param [String] text          markdown text
+        # @param  [String]  text          embedded yaml
+        # @return [Problem] problem
         def parse(text)
           yaml = YAML.load text
-          if yaml.is_a?(Hash) and yaml.has_key?(FORMAT)
-            get_instance(yaml)
-          else raise RenderError, "Expected a YAML dictionary containing the #{FORMAT} key."
-          end
+          get_instance(yaml)
         rescue ::Psych::SyntaxError => e
           raise RenderError, e.message
         end
@@ -48,11 +50,18 @@ module Spirit
 
         # @return [Problem] problem
         def get_instance(yaml)
+          raise RenderError, "Missing 'format' key in given YAML" unless instantiable? yaml
           klass = Spirit::Render.const_get(yaml[FORMAT].capitalize)
-          raise NameError.new unless klass < Problem
+          raise NameError unless klass < Problem
           klass.new(yaml)
         rescue NameError
           raise RenderError, 'Unrecognized format: %p' % yaml[FORMAT]
+        end
+
+        private
+
+        def instantiable?(yaml)
+          yaml.is_a?(Hash) and yaml.has_key?(FORMAT)
         end
 
       end
@@ -64,6 +73,7 @@ module Spirit
       def initialize(yaml)
         @yaml = yaml
         @yaml[ID] ||= SecureRandom.uuid
+        @yaml[QUESTION] = MARKDOWN.render @yaml[QUESTION]
       end
 
       # @todo TODO should probably show some error message in the preview,
