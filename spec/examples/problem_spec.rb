@@ -35,6 +35,20 @@ describe Spirit::Render::Problem do
         end
       end
 
+      context 'that do not have string questions' do
+        it 'raises a RenderError' do
+          text = FactoryGirl.create(:short, question: ['x'])
+          expect { parse text }.to raise_error(Spirit::Render::RenderError)
+        end
+      end
+
+      context 'that do not have questions' do
+        it 'raises a RenderError' do
+          text = FactoryGirl.create(:short, question: nil)
+          expect { parse text }.to raise_error(Spirit::Render::RenderError)
+        end
+      end
+
     end
 
     context 'given problems with valid formats in different cases' do
@@ -56,16 +70,6 @@ describe Spirit::Render::Problem do
   describe '#valid?' do
 
     context 'given YAML markup' do
-
-      it 'does not accept missing questions' do
-        text = FactoryGirl.create(:short, question: nil)
-        parse(text).should_not be_valid
-      end
-
-      it 'does not accept questions that are not strings' do
-        text = FactoryGirl.create(:short, question: ['x'])
-        parse(text).should_not be_valid
-      end
 
       it 'does not accept missing answers' do
         text = FactoryGirl.create(:short, answer: nil)

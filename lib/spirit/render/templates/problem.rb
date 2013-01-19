@@ -73,6 +73,7 @@ module Spirit
       def initialize(yaml)
         @yaml = yaml
         @yaml[ID] ||= SecureRandom.uuid
+        raise RenderError.new('Invalid problem.') unless @yaml[QUESTION].is_a? String
         @yaml[QUESTION] = MARKDOWN.render @yaml[QUESTION]
       end
 
