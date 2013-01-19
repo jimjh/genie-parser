@@ -16,8 +16,9 @@ module Spirit
     # @param [#read, #to_str] source
     # @param [Hash] opts         options for {::Redcarpet}
     def initialize(source, opts={})
+      prob = opts.delete(:prob_strat) || Render::Problem
       opts = MARKDOWN_EXTENSIONS.merge opts
-      rndr = Render::HTML.new
+      rndr = Render::HTML.new prob_strat: prob
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
       @data   = case
                 when source.respond_to?(:to_str) then source.to_str

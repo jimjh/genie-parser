@@ -33,6 +33,7 @@ module Spirit
       # Creates a new HTML renderer.
       # @param [Hash] options        described in the RedCarpet documentation.
       def initialize(options={})
+        @prob_strat = options.delete(:prob_strat) || Render::Problem
         super CONFIGURATION.merge options
         @nav, @headers = Navigation.new, Headers.new
         @prob, @img = 0, 0 # indices for Problem #, Figure #
@@ -102,7 +103,7 @@ module Spirit
       # @param [String] yaml            YAML markup
       # @return [String] rendered HTML
       def problem(yaml)
-        problem = Problem.parse(yaml)
+        problem = @prob_strat.parse(yaml)
         Spirit.logger.record :problem, "ID: #{problem.id}"
         problem.save! and problem.render(index: @prob += 1)
       rescue RenderError
