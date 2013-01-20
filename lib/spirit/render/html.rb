@@ -36,6 +36,7 @@ module Spirit
         super CONFIGURATION.merge options
         @nav, @headers = Navigation.new, Headers.new
         @prob, @img = 0, 0 # indices for Problem #, Figure #
+        @name = options.delete(:name) || 'untitled'
       end
 
       # Pygmentizes code blocks.
@@ -104,7 +105,7 @@ module Spirit
       def problem(yaml)
         problem = Problem.parse(yaml)
         Spirit.logger.record :problem, "ID: #{problem.id}"
-        problem.save! and problem.render(index: @prob += 1)
+        problem.save!(@name) and problem.render(index: @prob += 1)
       rescue RenderError
         yaml
       end

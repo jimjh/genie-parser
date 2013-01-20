@@ -88,7 +88,7 @@ module Spirit
       # Saves the answer to a file on disk.
       # @todo TODO should probably show some error message in the preview,
       #   so that the author doesn't have to read the logs.
-      def save!
+      def save!(name)
         raise RenderError.new('Invalid problem.') unless valid?
         solution = File.join(Spirit::SOLUTION_DIR, id + Spirit::SOLUTION_EXT)
         File.open(solution, 'wb+') { |file| Marshal.dump answer, file }

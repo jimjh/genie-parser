@@ -17,7 +17,7 @@ module Spirit
     # @param [Hash] opts         options for {::Redcarpet}
     def initialize(source, opts={})
       opts = MARKDOWN_EXTENSIONS.merge opts
-      rndr = Render::HTML.new
+      rndr = Render::HTML.new(name: opts[:name])
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
       @data   = case
                 when source.respond_to?(:to_str) then source.to_str
