@@ -1,4 +1,5 @@
 # Spirit
+[![Build Status](https://travis-ci.org/jimjh/genie-parser.png)](https://travis-ci.org/jimjh/genie-parser) [![Dependency Status](https://gemnasium.com/51879360b801f8ca2bf218a37c7168df.png)](https://gemnasium.com/jimjh/genie-parser) [![Code Climate](https://codeclimate.com/github/jimjh/genie-parser.png)](https://codeclimate.com/github/jimjh/genie-parser)
 
 Genie's parser, which parses the Genie Markup Language and produces HTML
 partials. Both Aladdin and Lamp should depend on this gem for all their parsing
@@ -22,8 +23,12 @@ Or install it yourself as:
 
 ### Parsing a document
 
-  Spirit::Document.new(data, opts).render //=> rendered html
+```rb
+Spirit::Document.new(data, opts).render //=> rendered html
+```
 
 ### Parsing a manifest
 
-  Spirit::Manifest.new(data, opts) //=> configuration object
+```rb
+Spirit::Manifest.new(data, opts) //=> configuration object
+```
