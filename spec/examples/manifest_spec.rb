@@ -66,7 +66,7 @@ describe Spirit::Manifest do
     after   { FileUtils.remove_entry_secure @dir }
 
     context 'given a manifest file' do
-      before  { IO.write(@dir + 'manifest.yml', manifest) }
+      before  { File.open(@dir + 'manifest.yml', 'w+') { |f| f.write manifest } }
       subject { Spirit::Manifest.load_file @dir + 'manifest.yml' }
       it_behaves_like 'manifest parser'
     end
@@ -78,7 +78,7 @@ describe Spirit::Manifest do
     end
 
     context 'given a non-readable file' do
-      before  { IO.write(@dir + 'manifest.yml', '---', perm: 0333) }
+      before  { File.open(@dir + 'manifest.yml', 'w+', 0333) { |f| f.write '---' } }
       it 'raises ENOENT if the file does not exist' do
         expect { Spirit::Manifest.load_file '/path/to/non-existent/file' }.to raise_error(Errno::ENOENT)
       end
