@@ -32,7 +32,7 @@ module Spirit
     def self.load(source)
       new YAML.load source
     rescue ::Psych::SyntaxError => e
-      raise ManifestError, e.message
+      raise ManifestError, 'Unexpected syntax error - ' + e.message
     end
 
     # Load configuration from given yaml file.

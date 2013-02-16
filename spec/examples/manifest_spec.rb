@@ -33,7 +33,7 @@ describe Spirit::Manifest do
     context 'given a manifest containing invalid YAML' do
       let(:manifest) { 'x: """' }
       it 'raises Spirit::ManifestError' do
-        expect { subject }.to raise_error Spirit::ManifestError, /unexpected/
+        expect { subject }.to raise_error Spirit::ManifestError, /unexpected/i
       end
     end
 
