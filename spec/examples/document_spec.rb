@@ -49,7 +49,12 @@ describe Spirit::Document do
 
     it 'allows fenced code blocks' do
       o = '</pre>'
-      Spirit::Document.new("```\nxyz\n```").render.should match(/#{o}/)
+      input = <<-eos
+      ```
+      xyz
+      ```
+      eos
+      Spirit::Document.new(input).render.should match(/#{o}/)
     end
 
     let(:string)   { SecureRandom.uuid }

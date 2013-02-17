@@ -41,7 +41,7 @@ module Spirit
     def self.load_file(path)
       File.open(path, 'r:utf-8') { |f| new YAML.load f.read }
     rescue ::Psych::SyntaxError => e
-      raise ManifestError, e.message
+      raise ManifestError, 'Unexpected syntax error - ' + e.message
     end
 
     private_class_method :new
