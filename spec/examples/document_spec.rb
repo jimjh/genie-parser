@@ -47,7 +47,7 @@ describe Spirit::Document do
       Spirit::Document.new(" x | y | z \n---|---|---").render.should match(/#{o}/)
     end
 
-    it 'allows fenced code blocks' do
+    it 'allows fenced code blocks', travis: false do
       o = '</pre>'
       input = <<-eos
       ```
