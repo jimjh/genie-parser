@@ -1,6 +1,7 @@
 # ~*~ encoding: utf-8 ~*~
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/string'
+require 'yaml'
 
 module Spirit
 
@@ -30,7 +31,7 @@ module Spirit
     # @param [String] source
     # @return [Manifest] manifest
     def self.load(source)
-      new YAML.load source
+      new ::YAML.load source
     rescue ::Psych::SyntaxError => e
       raise ManifestError, 'Unexpected syntax error - ' + e.message
     end
@@ -39,7 +40,7 @@ module Spirit
     # @param [String] path
     # @return [Manifest] manifest
     def self.load_file(path)
-      File.open(path, 'r:utf-8') { |f| new YAML.load f.read }
+      File.open(path, 'r:utf-8') { |f| new ::YAML.load f.read }
     rescue ::Psych::SyntaxError => e
       raise ManifestError, 'Unexpected syntax error - ' + e.message
     end
