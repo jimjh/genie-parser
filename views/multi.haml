@@ -6,11 +6,11 @@
     %p= question
 
     .row.collapse
-      .ten.mobile-three.columns
+      .large-10.small-3.columns
         -options.each do |value, label|
           %label{for: 'answer'}
             %input{name: 'answer', type: 'radio', value: value}
               = label
-      .two.mobile-one.columns
+      .large-2.small-1.columns
         %a.button.submit.small.expand.postfix.radius{href: '#'} Submit
 
