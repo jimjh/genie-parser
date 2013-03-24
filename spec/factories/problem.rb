@@ -3,7 +3,11 @@ FactoryGirl.define do
 
   factory :problem, class: String do
 
-    id          { SecureRandom.uuid }
+    factory :table, class: String do
+      format      'table'
+      answer      { Faker::Lorem.sentence }
+      question    { Faker::Lorem.sentence }
+    end
 
     factory :short, class: String do
       format      'short'

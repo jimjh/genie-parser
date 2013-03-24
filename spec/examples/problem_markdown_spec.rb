@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Spirit::Render::Problem do
 
   def render(yaml)
-    Spirit::Render::Problem.parse(yaml).render(index: 0)
+    Spirit::Render::Problem.parse(yaml).render
   end
 
   describe '::parse' do

@@ -4,7 +4,9 @@ require 'spec_helper'
 describe Spirit::Render::Problem do
 
   def parse(yaml); Spirit::Render::Problem.parse yaml; end
-  let(:subject) { parse input }
+
+  subject { parse input }
+  let(:input) { FactoryGirl.create(:short) }
 
   describe '::parse' do
 
@@ -61,43 +63,27 @@ describe Spirit::Render::Problem do
     end
 
     context 'given valid YAML markup' do
-      let(:input) { FactoryGirl.create(:short) }
       it { should be_kind_of(Spirit::Render::Problem) }
     end
 
   end
 
   describe '#valid?' do
-
-    context 'given YAML markup' do
-
-      it 'does not accept missing answers' do
-        text = FactoryGirl.create(:short, answer: nil)
-        parse(text).should_not be_valid
-      end
-
-      it 'accepts complete questions' do
-        text = FactoryGirl.create(:short)
-        parse(text).should be_valid
-      end
-
+    it { should be_valid }
+    it 'does not accept missing answers' do
+      text = FactoryGirl.create(:short, answer: nil)
+      parse(text).should_not be_valid
     end
-
   end
 
-  describe '::new' do
+  describe '#render' do
+    its(:render) { should be_kind_of String }
+    its(:render) { should match /Problem 0/ }
+  end
 
-    context 'without an ID' do
-      let(:input) { FactoryGirl.create(:short, id: nil) }
-      its(:id) { should_not be_empty }
-    end
-
-    context 'with an ID' do
-      let(:id)    { SecureRandom.uuid }
-      let(:input) { FactoryGirl.create(:short, id: id) }
-      its(:id) { should eq id }
-    end
-
+  describe '#save!' do
+    its(:save!)  { should match /0\.sol/ }
+    it 'saves the solution file to disk'
   end
 
 end

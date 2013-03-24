@@ -19,6 +19,7 @@ module Test
 end
 
 $:.unshift Test::ROOT + '..' + 'lib'
+
 require 'spirit'
 FactoryGirl.find_definitions
 
