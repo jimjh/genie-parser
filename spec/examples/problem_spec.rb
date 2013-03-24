@@ -24,6 +24,7 @@ describe Spirit::Render::Problem do
 
     context 'given valid YAML markup' do
       it { should be_kind_of(Spirit::Render::Problem) }
+      include_examples 'no render error'
     end
 
     context 'given invalid YAML markup' do
