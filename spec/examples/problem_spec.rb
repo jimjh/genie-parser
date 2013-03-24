@@ -8,6 +8,18 @@ describe Spirit::Render::Problem do
   subject     { parse input }
   let(:input) { FactoryGirl.create(:short) }
 
+  shared_examples 'render error' do
+    it 'raises a RenderError' do
+      expect { parse input }.to raise_error Spirit::Render::RenderError
+    end
+  end
+
+  shared_examples 'no render error' do
+    it 'does not raise a RenderError' do
+      expect { parse input }.to_not raise_error Spirit::Render::RenderError
+    end
+  end
+
   describe '::parse' do
 
     context 'given valid YAML markup' do
@@ -18,51 +30,39 @@ describe Spirit::Render::Problem do
 
       context 'that are not associative arrays' do
         %w({xxx} [[?]] [["?"]]).each do |input|
-          it 'raises a RenderError' do
-            expect { parse input }.to raise_error(Spirit::Render::RenderError)
-          end
+          let(:input) { input }
+          include_examples 'render error'
         end
       end
 
       context 'that are missing formats' do
         let(:input) { FactoryGirl.create(:short, format: nil) }
-        it 'raises a RenderError' do
-          expect { parse input }.to raise_error(Spirit::Render::RenderError)
-        end
+        include_examples 'render error'
       end
 
       context 'that have invalid formats' do
-        let(:formats) { %w(w x ?) }
-        it 'raises a RenderError' do
-          formats.each do |format|
-            input = FactoryGirl.create(:short, format: format)
-            expect { parse input }.to raise_error(Spirit::Render::RenderError)
-          end
+        %w(w x ?).each do |format|
+          let(:input) { FactoryGirl.create(:short, format: format) }
+          include_examples 'render error'
         end
       end
 
       context 'that do not have string questions' do
-        it 'raises a RenderError' do
-          text = FactoryGirl.create(:short, question: ['x'])
-          expect { parse text }.to raise_error(Spirit::Render::RenderError)
-        end
+        let(:input) { FactoryGirl.create(:short, question: ['x']) }
+        include_examples 'render error'
       end
 
       context 'that do not have questions' do
-        it 'raises a RenderError' do
-          text = FactoryGirl.create(:short, question: nil)
-          expect { parse text }.to raise_error(Spirit::Render::RenderError)
-        end
+        let(:input) { FactoryGirl.create(:short, question: nil) }
+        include_examples 'render error'
       end
 
     end
 
     context 'given problems with valid formats in different cases' do
       %w(short Short SHORT shORt).each do |format|
-        it 'does not raise a RenderError' do
-          input = FactoryGirl.create(:short, format: format)
-          expect { parse input }.to_not raise_error
-        end
+        let(:input) { FactoryGirl.create(:short, format: format) }
+        include_examples 'no render error'
       end
     end
 
