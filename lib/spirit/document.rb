@@ -6,7 +6,6 @@ require 'spirit/render'
 module Spirit
 
   # Document written in Genie Markup Language.
-  # @todo TODO clean?
   class Document
 
     attr_accessor :data, :engine
@@ -17,7 +16,7 @@ module Spirit
     # @param [Hash] opts         options for {::Redcarpet}
     def initialize(source, opts={})
       opts = MARKDOWN_EXTENSIONS.merge opts
-      rndr = Render::HTML.new(name: opts[:name])
+      rndr = Render::HTML.new problems: opts[:problems]
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
       @data   = case
                 when source.respond_to?(:to_str) then source.to_str
@@ -26,8 +25,9 @@ module Spirit
     end
 
     # @return [Boolean] true iff if was a clean parse with no errors.
+    # @todo TODO
     def clean?
-      # TODO
+      raise NotImplementedError
     end
 
     # Rendered output is returned as a string if +anIO+ is not provided. The

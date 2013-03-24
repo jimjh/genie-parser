@@ -31,11 +31,14 @@ module Spirit
       }
 
       # Creates a new HTML renderer.
-      # @param [Hash] options        described in the RedCarpet documentation.
+      # @param  [Hash] options        described in the RedCarpet documentation.
+      # @option options [Array] :problems container to collect parsed problems;
+      #   if provided, then solutions will not be persisted.
       def initialize(options={})
+        @persist_solutions = !options.key?(:problems)
+        @problems          = options.delete(:problems) || []
         super CONFIGURATION.merge options
-        @nav, @headers = Navigation.new, Headers.new
-        @prob, @img = 0, 0 # indices for Problem #, Figure #
+        @nav, @headers, @img = Navigation.new, Headers.new, 0
       end
 
       # Pygmentizes code blocks.
@@ -102,9 +105,11 @@ module Spirit
       # @param [String] yaml            YAML markup
       # @return [String] rendered HTML
       def problem(yaml)
-        problem = Problem.parse(yaml, @prob += 1)
+        problem = Problem.parse(yaml, @problems.size)
+        problem.save!  if @persist_solutions
+        problem.render
+        @problems << { digest: problem.digest, solution: Marshal.dump(problem.answer) }
         Spirit.logger.record :problem, "ID: #{problem.id}"
-        problem.save! and problem.render
       rescue RenderError
         yaml
       end

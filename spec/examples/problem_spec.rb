@@ -3,12 +3,16 @@ require 'spec_helper'
 
 describe Spirit::Render::Problem do
 
-  def parse(yaml); Spirit::Render::Problem.parse yaml; end
+  def parse(*args); Spirit::Render::Problem.parse *args; end
 
-  subject { parse input }
+  subject     { parse input }
   let(:input) { FactoryGirl.create(:short) }
 
   describe '::parse' do
+
+    context 'given valid YAML markup' do
+      it { should be_kind_of(Spirit::Render::Problem) }
+    end
 
     context 'given invalid YAML markup' do
 
@@ -60,10 +64,6 @@ describe Spirit::Render::Problem do
           expect { parse input }.to_not raise_error
         end
       end
-    end
-
-    context 'given valid YAML markup' do
-      it { should be_kind_of(Spirit::Render::Problem) }
     end
 
   end

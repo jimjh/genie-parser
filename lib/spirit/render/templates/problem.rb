@@ -36,8 +36,9 @@ module Spirit
         # @param  [Fixnum]  id            ID of problem
         # @return [Problem] problem
         def parse(text, id = 0)
-          yaml = YAML.load text
-          get_instance(yaml, id)
+          digest = OpenSSL::Digest::SHA256.digest text
+          yaml   = YAML.load text
+          get_instance(yaml, digest, id)
         rescue ::Psych::SyntaxError => e
           raise RenderError, e.message
         end
@@ -50,11 +51,11 @@ module Spirit
         end
 
         # @return [Problem] problem
-        def get_instance(yaml, id = 0)
+        def get_instance(yaml, digest, id = 0)
           raise RenderError, "Missing 'format' key in given YAML" unless instantiable? yaml
           klass = Spirit::Render.const_get(yaml[FORMAT].capitalize)
           raise NameError unless klass < Problem
-          klass.new(yaml, id)
+          klass.new(yaml, digest, id)
         rescue NameError
           raise RenderError, 'Unrecognized format: %p' % yaml[FORMAT]
         end
@@ -68,13 +69,15 @@ module Spirit
       end
 
       accessor ID, *KEYS
+      attr_reader :digest
 
       # Creates a new problem from the given YAML.
       # @param [Hash] yaml          parsed yaml object
+      # @param [String] digest      SHA-256 hash of yaml text
       # @param [Fixnum] id          integer ID of question
-      def initialize(yaml, id = 0)
-        @yaml     = yaml
-        @yaml[ID] = id
+      def initialize(yaml, digest, id = 0)
+        @yaml, @digest = yaml, digest
+        @yaml[ID]      = id
         raise RenderError.new('Invalid problem.') unless @yaml[QUESTION].is_a? String
         @yaml[QUESTION] = MARKDOWN.render @yaml[QUESTION]
       end

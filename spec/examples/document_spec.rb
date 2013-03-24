@@ -57,6 +57,14 @@ describe Spirit::Document do
       Spirit::Document.new(input).render.should match(/#{o}/)
     end
 
+    it 'collects problems in the given array' do
+      problem  = FactoryGirl.create :short
+      problems = []
+      input    = %Q["""\n#{problem}\n"""]
+      Spirit::Document.new(input, problems: problems).render
+      problems.size.should be 1
+    end
+
     let(:string)   { SecureRandom.uuid }
     let(:document) { Spirit::Document.new string }
 
