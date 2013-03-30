@@ -106,12 +106,13 @@ module Spirit
       # @return [String] rendered HTML
       def problem(yaml)
         problem = Problem.parse(yaml, @problems.size)
-        problem.save!  if @persist_solutions
-        problem.render
+        problem.save! if @persist_solutions
+        form = problem.render
         @problems << { digest: problem.digest, solution: Marshal.dump(problem.answer) }
         Spirit.logger.record :problem, "ID: #{problem.id}"
       rescue RenderError
         yaml
+      else form
       end
 
       # Prepares a block image. Raises {RenderError} if the given text does not
