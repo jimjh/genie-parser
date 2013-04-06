@@ -21,6 +21,7 @@ end
 $:.unshift Test::ROOT + '..' + 'lib'
 
 require 'spirit'
+Spirit.initialize_logger '/dev/null'
 FactoryGirl.find_definitions
 
 RSpec.configure do |config|

@@ -2,6 +2,7 @@
 require 'spirit/render/errors'
 require 'spirit/render/sanitize'
 require 'spirit/render/templates'
+require 'spirit/render/math'
 
 module Spirit
 
@@ -76,16 +77,19 @@ module Spirit
         html
       end
 
-      # Runs a first pass through the document to look for problem blocks.
+      # Runs a first pass through the document to look for inline math, block
+      # math, and block problems.
       # @param [String] document    markdown document
       def preprocess(document)
-        document.gsub(PROBLEM_REGEX) { |yaml| problem $1 }
+        @math = Math.new(document)
+        @math.filter.gsub(PROBLEM_REGEX) { problem $1 }
       end
 
       # Sanitizes the final document.
       # @param [String]  document    html document
       # @return [String] sanitized document
       def postprocess(document)
+        document = @math.replace(document)
         HTML.sanitize.clean(@nav.render + document.force_encoding('utf-8'))
       end
 
