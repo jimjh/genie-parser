@@ -90,7 +90,10 @@ module Spirit
       # @return [String] sanitized document
       def postprocess(document)
         document = @math.replace(document)
-        HTML.sanitize.clean(@nav.render + document.force_encoding('utf-8'))
+        document = Layout.new.render \
+          navigation: @nav.render,
+          content: document.force_encoding('utf-8')
+        HTML.sanitize.clean document
       end
 
       private

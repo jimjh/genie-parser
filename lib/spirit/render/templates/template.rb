@@ -17,7 +17,8 @@ module Spirit
 
       # Retrieves the +view+ singleton. If it is nil, initializes it from
       # +self.class.TEMPLATE+. Note that this is reloaded with every refresh so
-      # I can edit the templates without refreshing.
+      # I can edit the templates without restarting.
+      # @todo TODO optimize by reusing the HAML engine
       # @return [Haml::Engine] haml engine
       def view
         return @view unless @view.nil?

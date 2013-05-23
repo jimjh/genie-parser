@@ -24,9 +24,7 @@ module Spirit
 
       # Renders the navigation bar in HTML.
       def render(locals={})
-        # FIXME disabled for now
-        ''
-        # super locals.merge(sections: @sections)
+        super locals.merge(sections: @sections)
       end
 
     end
