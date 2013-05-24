@@ -1,9 +1,21 @@
 -# coding: UTF-8
 .row
-  .large-12
+  .large-12.columns
     = navigation
 .row
   .large-6.columns
-    = content
+    = preserve content
   .large-6.columns
-
+    .lesson-problems.panel
+      .pagination-centered
+        %ul.pagination
+          %li.arrow.unavailable
+            %a{href: '', 'data-page-nav' => 'prev'} &laquo;
+          - problems.size.times do |i|
+            %li{class: i != 0 ? '' : 'current'}
+              %a{href: '', 'data-page' => i}= i + 1
+          %li.arrow.unavailable
+            %a{href: '', 'data-page-nav' => 'next'} &raquo;
+      - problems.each_with_index do |problem, i|
+        %div.problem-wrapper{class: i != 0 ? 'hide' : ''}
+          = problem

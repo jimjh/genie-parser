@@ -38,6 +38,7 @@ module Spirit
       def initialize(options={})
         @persist_solutions = !options.key?(:problems)
         @problems          = options.delete(:problems) || []
+        @problems_html     = []
         super CONFIGURATION.merge options
         @nav, @headers, @img = Navigation.new, Headers.new, 0
       end
@@ -89,10 +90,11 @@ module Spirit
       # @param [String]  document    html document
       # @return [String] sanitized document
       def postprocess(document)
-        document = @math.replace(document)
         document = Layout.new.render \
           navigation: @nav.render,
-          content: document.force_encoding('utf-8')
+          content: document.force_encoding('utf-8'),
+          problems: @problems_html
+        document = @math.replace(document)
         HTML.sanitize.clean document
       end
 
@@ -108,18 +110,18 @@ module Spirit
       #end
 
       # Prepares a problem form. Returns +yaml+ if the given text does not
-      # contain valid yaml markup for a problem.
+      # contain valid yaml markup for a problem, and an empty string otherwise.
       # @param [String] yaml            YAML markup
-      # @return [String] rendered HTML
+      # @return [String] rendered HTML or empty string
       def problem(yaml)
         problem = Problem.parse(yaml, @problems.size)
         problem.save! if @persist_solutions
-        form = problem.render
+        @problems_html << problem.render
         @problems << { digest: problem.digest, solution: Marshal.dump(problem.answer) }
         Spirit.logger.record :problem, "ID: #{problem.id}"
       rescue RenderError
         yaml
-      else form
+      else ''
       end
 
       # Prepares a block image. Raises {RenderError} if the given text does not

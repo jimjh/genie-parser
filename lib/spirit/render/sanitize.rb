@@ -25,7 +25,7 @@ module Spirit
 
       # white-listed attributes
       ATTRIBUTES = {
-        'a'   => ['href', 'name', 'data-magellan-destination'],
+        'a'   => ['href', 'name', 'data-magellan-destination', 'data-page', 'data-page-nav'],
         'dd'  => ['data-magellan-arrival'],
         'dl'  => ['data-magellan-expedition'],
         'img' => ['src'],
