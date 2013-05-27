@@ -5,15 +5,14 @@
     = preserve content
   .large-6.columns
     .lesson-problems.panel
-      .pagination-centered
-        %ul.pagination
-          %li.arrow.unavailable
-            %a{href: '', 'data-page-nav' => 'prev'} &laquo;
-          - problems.size.times do |i|
-            %li{class: i != 0 ? '' : 'current'}
-              %a{href: '', 'data-page' => i}= i + 1
-          %li.arrow.unavailable
-            %a{href: '', 'data-page-nav' => 'next'} &raquo;
+      .row
+        .large-6.large-centered.columns
+          .jqpagination
+            %a.first{href: '#', 'data-action' => 'first'} &laquo;
+            %a.previous{href: '#', 'data-action' => 'previous'} &lsaquo;
+            %input{type: 'text', readonly: 'readonly', 'data-max-page' => problems.size}
+            %a.next{href: '#', 'data-action' => 'next'} &rsaquo;
+            %a.last{href: '#', 'data-action' => 'last'} &raquo;
       - problems.each_with_index do |problem, i|
         %div.problem-wrapper{class: i != 0 ? 'hide' : ''}
           = problem
