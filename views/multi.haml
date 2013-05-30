@@ -1,16 +1,17 @@
 -# coding: UTF-8
-%form.problem{action: "verify/problem/#{id}", 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
+%form.problem.custom{action: "verify/problem/#{id}", 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
   %fieldset
 
     %legend Problem #{id + 1}
     %p= question
 
     .row.collapse
-      .large-10.small-3.columns
+      .large-10.columns
         -options.each do |value, label|
           %label{for: 'answer'}
-            %input{name: 'answer', type: 'radio', value: value}
+            %input.hide{name: 'answer', type: 'radio', value: value}
+              %span.custom.radio
               = label
-      .large-2.small-1.columns
+      .large-2.columns
         %input.small.button.expand.radius{type: 'submit', value: 'Submit'}
 
