@@ -48,15 +48,8 @@ module Spirit
       # @param [String] marker      name of language, for syntax highlighting
       # @return [String] highlighted code
       def block_code(code, marker)
-        #language, type, id = (marker || 'text').split ':'
-        #highlighted = Albino.colorize code, language
-        language, _, _ = (marker || 'text').split ':'
+        language = marker || 'text'
         Albino.colorize code, language
-        # TODO
-        #case type
-        #when 'demo', 'test'
-        #  executable id: id, raw: code, colored: highlighted
-        #else highlighted end
       end
 
       # Detects block images and renders them as such.
