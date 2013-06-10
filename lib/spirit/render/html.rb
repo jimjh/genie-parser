@@ -18,7 +18,7 @@ module Spirit
       @sanitize = Sanitize.new
       class << self; attr_reader :sanitize end
 
-      # Paragraphs that start and end with '---' are treated as embedded YAML
+      # Paragraphs that start and end with +"""+ are treated as embedded YAML
       # and are parsed for questions/answers.
       PROBLEM_REGEX = /^"""$(.*?)^"""$/m
 
