@@ -24,12 +24,6 @@ module Spirit
                 else nil end
     end
 
-    # @return [Boolean] true iff if was a clean parse with no errors.
-    # @todo TODO
-    def clean?
-      raise NotImplementedError
-    end
-
     # Rendered output is returned as a string if +anIO+ is not provided. The
     # output is sanitized with {Spirit::Render::Sanitize}, and should be
     # considered safe for embedding into a HTML page without further escaping or
