@@ -1,5 +1,6 @@
 -# coding: UTF-8
-%form.problem{action: "verify/problem/#{id}", 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
+%form.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
+  %input{type: 'hidden', name: 'position', value: id}
   %fieldset
 
     %legend Problem #{id + 1}
