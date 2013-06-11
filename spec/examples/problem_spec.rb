@@ -79,7 +79,7 @@ describe Spirit::Render::Problem do
 
   describe '#render' do
     its(:render) { should be_kind_of String }
-    its(:render) { should match /Problem 1/ }
+    it 's render should match content'
   end
 
 end
