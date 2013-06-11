@@ -10,7 +10,7 @@ module Spirit
       # Renders the given problem using {#view}.
       # @param [Hash] locals         local variables to pass to the template
       def render(locals={})
-        view.render Object.new, locals
+        view.render self, locals
       end
 
       private

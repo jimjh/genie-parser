@@ -69,14 +69,15 @@ module Spirit
       end
 
       accessor ID, *KEYS
-      attr_reader :digest
+      attr_accessor :nesting
+      attr_reader   :digest
 
       # Creates a new problem from the given YAML.
       # @param [Hash] yaml          parsed yaml object
       # @param [String] digest      SHA-256 hash of yaml text
       # @param [Fixnum] id          integer ID of question
       def initialize(yaml, digest, id = 0)
-        @yaml, @digest = yaml, digest
+        @yaml, @digest, @nesting = yaml, digest, []
         @yaml[ID]      = id
         raise RenderError.new('Invalid problem.') unless @yaml[QUESTION].is_a? String
         @yaml[QUESTION] = MARKDOWN.render @yaml[QUESTION]

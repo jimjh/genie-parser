@@ -8,7 +8,8 @@ module Spirit
   # Document written in Genie Markup Language.
   class Document
 
-    attr_accessor :data, :engine
+    attr_reader :data, :engine, :rndr
+    delegate :solutions, to: :rndr
 
     # Creates a new document from the given source. It should contain valid
     # markdown + embedded YAML.
@@ -16,7 +17,7 @@ module Spirit
     # @param [Hash] opts         options for {::Redcarpet}
     def initialize(source, opts={})
       opts = MARKDOWN_EXTENSIONS.merge opts
-      rndr = Render::HTML.new problems: opts[:problems]
+      @rndr   = Render::HTML.new
       @engine = ::Redcarpet::Markdown.new(rndr, opts)
       @data   = case
                 when source.respond_to?(:to_str) then source.to_str

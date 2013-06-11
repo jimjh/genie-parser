@@ -1,7 +1,7 @@
 module Spirit
   module Render
 
-    # Mixin for pre-processing math.
+    # Pre-processes math markup in latex.
     # Adapted from
     # http://www.math.union.edu/~dpvc/transfer/mathjax/mathjax-editing.js
     class Math

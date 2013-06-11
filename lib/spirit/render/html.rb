@@ -3,6 +3,7 @@ require 'spirit/render/errors'
 require 'spirit/render/sanitize'
 require 'spirit/render/templates'
 require 'spirit/render/math'
+require 'spirit/render/problems'
 
 module Spirit
 
@@ -15,41 +16,35 @@ module Spirit
     # @see http://github.github.com/github-flavored-markdown/
     class HTML < ::Redcarpet::Render::HTML
 
-      @sanitize = Sanitize.new
-      class << self; attr_reader :sanitize end
-
-      # Paragraphs that start and end with +"""+ are treated as embedded YAML
-      # and are parsed for questions/answers.
-      PROBLEM_REGEX = /^"""$(.*?)^"""$/m
+      cattr_accessor(:sanitizer) { Sanitize.new }
+      attr_accessor :headers, :nesting, :problems
+      delegate :solutions, to: :problems
 
       # Paragraphs that only contain images are rendered with {Spirit::Render::Image}.
       IMAGE_REGEX = /\A\s*<img[^<>]+>\s*\z/m
 
-      # Renderer configuration options.
-      CONFIGURATION = {
-        hard_wrap:          true,
-        no_styles:          true,
-      }
-
       # Creates a new HTML renderer.
-      # @param  [Hash] options        described in the RedCarpet documentation.
-      # @option options [Array] :problems container to collect parsed problems;
-      #   if provided, then solutions will not be persisted.
-      def initialize(options={})
-        @persist_solutions = !options.key?(:problems)
-        @problems          = options.delete(:problems) || []
-        @problems_html     = []
-        super CONFIGURATION.merge options
+      # @param  [Hash] opts        described in the RedCarpet documentation
+      def initialize(opts={})
+        @nesting = []
+        super RENDERER_CONFIG.dup.merge opts
         @nav, @headers, @img = Navigation.new, Headers.new, 0
       end
 
       # Pygmentizes code blocks.
       # @param [String] code        code block contents
-      # @param [String] marker      name of language, for syntax highlighting
+      # @param [String] marker      name of language
       # @return [String] highlighted code
       def block_code(code, marker)
-        language = marker || 'text'
-        Albino.colorize code, language
+        Albino.colorize(code, marker || 'text')
+      end
+
+      def block_html(html)
+        if problems.is_marker? html
+          problems.replace_nesting html, nesting
+          ''
+        else html
+        end
       end
 
       # Detects block images and renders them as such.
@@ -66,9 +61,10 @@ module Spirit
       # Increases all header levels by one and keeps a navigation bar.
       # @return [String] rendered html
       def header(text, level)
-        html, name = h(text, level += 1)
-        @nav.append(text, name) if level == 2
-        html
+        h = headers.add(text, level+=1)
+        @nav.append(text, h.name) if level == 2
+        nest h
+        h.render
       end
 
       # Runs a first pass through the document to look for inline math, block
@@ -76,7 +72,9 @@ module Spirit
       # @param [String] document    markdown document
       def preprocess(document)
         @math = Math.new(document)
-        @math.filter.gsub(PROBLEM_REGEX) { problem $1 }
+        document = @math.filter
+        self.problems = Problems.new(document)
+        document = problems.filter
       end
 
       # Sanitizes the final document.
@@ -85,36 +83,18 @@ module Spirit
       def postprocess(document)
         document = Layout.new.render \
           navigation: @nav.render,
-          content: document.force_encoding('utf-8'),
-          problems: @problems_html
+          content:  document.force_encoding('utf-8'),
+          problems: problems
         document = @math.replace(document)
-        HTML.sanitize.clean document
+        sanitizer.clean document
       end
 
       private
 
-      # Prepares an executable code block.
-      # @option opts [String] id        author-supplied ID
-      # @option opts [String] raw       code to execute
-      # @option opts [String] colored   syntax highlighted code
-      # @return [String]
-      #def executable(opts)
-      #  opts[:colored] + @exe.render(Object.new, id: opts[:id], raw: opts[:raw])
-      #end
-
-      # Prepares a problem form. Returns +yaml+ if the given text does not
-      # contain valid yaml markup for a problem, and an empty string otherwise.
-      # @param [String] yaml            YAML markup
-      # @return [String] rendered HTML or empty string
-      def problem(yaml)
-        problem = Problem.parse(yaml, @problems.size)
-        problem.save! if @persist_solutions
-        @problems_html << problem.render
-        @problems << { digest: problem.digest, solution: Marshal.dump(problem.answer) }
-        Spirit.logger.record :problem, "ID: #{problem.id}"
-      rescue RenderError
-        yaml
-      else ''
+      # @param [Header] h
+      def nest(h)
+        nesting.pop until nesting.empty? or h.level > nesting.last.level
+        nesting << h
       end
 
       # Prepares a block image. Raises {RenderError} if the given text does not
@@ -123,14 +103,6 @@ module Spirit
       # @return [String] rendered HTML
       def block_image(text)
         Image.parse(text).render(index: @img += 1)
-      end
-
-      # Wraps the given text with header tags.
-      # @return [String] rendered HTML
-      # @return [String] anchor name
-      def h(text, level)
-        header = @headers.add(text, level)
-        return header.render, header.name
       end
 
       # Wraps the given text with paragraph tags.

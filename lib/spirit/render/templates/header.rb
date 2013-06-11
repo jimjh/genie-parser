@@ -31,7 +31,7 @@ module Spirit
       # Name of template file for rendering headers.
       TEMPLATE = 'header.haml'
 
-      attr_reader :name
+      attr_reader :name, :text, :level
 
       # Creates a new header.
       # @param [String] text          header text

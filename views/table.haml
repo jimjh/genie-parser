@@ -1,29 +1,22 @@
 -# coding: UTF-8
-%form.problem{action: "verify/problem/#{id}", 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
-  %input{type: 'hidden', name: 'position', value: id}
-  %fieldset
+.row
+  .large-12.columns
+    %table
+      %thead
+        -if headings
+          %tr
+            -headings.each do |heading|
+              %th= heading
 
-    %legend Problem #{id + 1}
-    %p= question
-
-    .row
-      .large-12.columns
-        %table
-          %thead
-            -if headings
-              %tr
-                -headings.each do |heading|
-                  %th= heading
-
-          %tbody
-            -grid.each_with_index do |row, i|
-              %tr
-                -row.each_with_index do |cell, j|
-                  %td
-                    - if Spirit::Render::Table.input? cell
-                      %input{name: "answer[#{i}][#{j}]", type: 'text'}
-                    - else
-                      = cell
-    .row
-      .large-2.small-1.columns
-        %input.small.button.radius{type: 'submit', value: 'Submit'}
+      %tbody
+        -grid.each_with_index do |row, i|
+          %tr
+            -row.each_with_index do |cell, j|
+              %td
+                - if Spirit::Render::Table.input? cell
+                  %input{name: "answer[#{i}][#{j}]", type: 'text'}
+                - else
+                  = cell
+.row
+  .large-2.small-1.columns
+    %input.small.button.radius{type: 'submit', value: 'Submit'}

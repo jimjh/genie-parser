@@ -18,8 +18,7 @@ module Spirit
       # Checks if the given yaml contains a valid MCQ.
       # @return [Boolean] true iff the yaml contains a valid MCQ.
       def valid?
-        super and
-          not @yaml[ANSWER].nil?
+        super and not @yaml[ANSWER].nil?
       end
 
     end

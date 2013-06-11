@@ -1,13 +1,7 @@
 -# coding: UTF-8
-%form.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{id}", method: 'post'}
-  %input{type: 'hidden', name: 'position', value: id}
-  %fieldset
-
-    %legend Problem #{id + 1}
-    %p= question
-
-    .row.collapse
-      .large-10.columns
-        %input{name: 'answer', type: 'text'}
-      .large-2.columns
-        %input.button.postfix.radius{type: 'submit', value: 'Submit'}
+%p= question
+.row.collapse
+  .large-10.columns
+    %input{name: 'answer', type: 'text'}
+  .large-2.columns
+    %input.button.postfix.radius{type: 'submit', value: 'Submit'}

@@ -10,9 +10,17 @@
           .jqpagination
             %a.first{href: '#', 'data-action' => 'first'} &laquo;
             %a.previous{href: '#', 'data-action' => 'previous'} &lsaquo;
-            %input{type: 'text', readonly: 'readonly', 'data-max-page' => problems.size}
+            %input{type: 'text', readonly: 'readonly', 'data-max-page' => problems.count}
             %a.next{href: '#', 'data-action' => 'next'} &rsaquo;
             %a.last{href: '#', 'data-action' => 'last'} &raquo;
       - problems.each_with_index do |problem, i|
         %div.problem-wrapper{class: i != 0 ? 'hide' : ''}
-          = problem
+          %form.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{problem.id}", method: 'post'}
+            %input{type: 'hidden', name: 'position', value: problem.id}
+            %fieldset
+              %legend Problem #{problem.id + 1}
+              %ul.breadcrumbs
+                - problem.nesting.each do |header|
+                  %li
+                    %a{href: '#' + header.name}= header.text
+              = problem.render
