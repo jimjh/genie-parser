@@ -82,9 +82,4 @@ describe Spirit::Render::Problem do
     its(:render) { should match /Problem 1/ }
   end
 
-  describe '#save!' do
-    its(:save!)  { should match /0\.sol/ }
-    it 'saves the solution file to disk'
-  end
-
 end
