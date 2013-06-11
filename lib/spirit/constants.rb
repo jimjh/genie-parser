@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 require 'tmpdir'
 
 module Spirit
@@ -21,7 +20,7 @@ module Spirit
     no_styles:          true,
   }.freeze
 
-  SOLUTION_DIR = Dir.tmpdir
+  SOLUTION_DIR = Dir.tmpdir.freeze
   SOLUTION_EXT = '.sol'.freeze
 
   # Name of index page.

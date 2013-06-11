@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/string'
 require 'yaml'
@@ -14,11 +13,11 @@ module Spirit
       verify: { 'bin' => 'string', 'arg_prefix' => 'string' },
       title: 'string',
       description: 'string',
-      categories: %w(string),
-      static_paths: %w(string)
-    }
+      categories: %w[string array],
+      static_paths: %w[string array]
+    }.freeze
 
-    # Creates a new configuration hash from the given source.
+    # Creates a new manifest from the given source.
     def initialize(hash)
       super nil
       hash ||= {}

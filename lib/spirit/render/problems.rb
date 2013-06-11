@@ -8,7 +8,9 @@ module Spirit
       # and are parsed for questions/answers.
       REGEX = /^"""$(.*?)^"""$/m
 
-      attr_reader :problems, :document, :solutions
+      MARKER = /<!-- %%(\d+)%% -->/
+
+      attr_reader :problems, :solutions
       delegate :size, :count, :each, :each_with_index, to: :problems
 
       def initialize(document)
@@ -17,14 +19,26 @@ module Spirit
         @solutions = []
       end
 
-      def filter
+      # Replaces YAML markup in document with <!-- %%index%% -->
+      # @return [String] document
+      def preprocess
         document.gsub(REGEX) { problem $1 }
       end
+
+      def block_html(html, nesting)
+        return html unless is_marker? html
+        replace_nesting html, nesting
+        ''
+      end
+
+      private
+
+      attr_reader :document
 
       # Update associated problem with nesting information.
       # @return [void]
       def replace_nesting(html, nesting)
-        match = html.strip.match(/<!-- %%(\d+)%% -->/)
+        match = html.strip.match MARKER
         prob  = problems[match[1].to_i]
         prob.nesting = nesting.dup
       end
@@ -32,10 +46,8 @@ module Spirit
       # @return [Boolean] true iff the given html corresponds to a problem
       #   marker
       def is_marker?(html)
-        html.strip =~ /<!-- %%(\d+)%% -->/ and problems[$1.to_i]
+        html.strip =~ MARKER and problems[$1.to_i]
       end
-
-      private
 
       # If the given text contains valid YAML, returns a marker. Otherwise,
       # returns the original text.

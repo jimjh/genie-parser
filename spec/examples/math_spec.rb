@@ -5,7 +5,7 @@ describe Spirit::Render::Math do
 
   describe '#filter' do
 
-    let(:filtered)  { Spirit::Render::Math.new(@input).filter }
+    let(:filtered)  { Spirit::Render::Math.new(@input).preprocess }
     let(:the_usual) { /here is some @@0@@ and @@1@@/ }
 
     it 'filters inline math with markers' do

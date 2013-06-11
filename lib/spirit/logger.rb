@@ -5,13 +5,13 @@ module Spirit
   # @see https://github.com/chriseppstein/compass/blob/stable/lib/compass/logger.rb
   class Logger < ::Logger
 
-    COLORS = { clear: 0, red: 31, green: 32, blue: 35, yellow: 33, grey: 37 }
+    COLORS = { clear: 0, red: 31, green: 32, blue: 35, yellow: 33, grey: 37 }.freeze
 
     ACTION_COLORS = {
-      :error     => :red,
-      :warning   => :yellow,
-      :problem   => :blue,
-    }
+      error:   :red,
+      warning: :yellow,
+      problem: :blue,
+    }.freeze
 
     # Record that an action has occurred.
     def record(action, *args)

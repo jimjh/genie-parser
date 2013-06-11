@@ -71,6 +71,10 @@ module Spirit
         super config
       end
 
+      def postprocess(document)
+        clean document
+      end
+
       private
 
       # @return [Hash] configuration hash.

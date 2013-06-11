@@ -24,12 +24,12 @@ module Spirit
 
       # Replace math in document with +@@index@@+.
       # @return [String] document
-      def filter
-        @blocks.each_with_index do |block, i|
+      def preprocess
+        blocks.each_with_index do |block, i|
           case
           when '@' == block[0] # store math marker
-            @blocks[i] = "@@#{@math.length}@@"
-            @math << block
+            blocks[i] = "@@#{math.length}@@"
+            math << block
           when @start       # in math
             case block
             when @close     # process if braces match
@@ -50,25 +50,27 @@ module Spirit
           end
         end
         process_math if @last
-        @blocks.join
+        blocks.join
       end
 
-      def replace(document)
-        document.gsub(/@@(\d+)@@/) { @math[$1.to_i] }
+      def postprocess(document)
+        document.gsub(/@@(\d+)@@/) { math[$1.to_i] }
       end
 
       private
 
+      attr_reader :blocks, :math
+
       # Collects the math from blocks +i+ through +j+, replaces &, <, and > by
       # named entities, and resets that math positions.
       def process_math(last = @last)
-        block = @blocks[@start..last].join
+        block = blocks[@start..last].join
           .gsub(/&/, '&amp;')
           .gsub(/</, '&lt;')
           .gsub(/>/, '&gt;')
-        last.downto(@start+1) { |k| @blocks[k] = '' }
-        @blocks[@start] = "@@#{@math.length}@@"
-        @math << block
+        last.downto(@start+1) { |k| blocks[k] = '' }
+        blocks[@start] = "@@#{math.length}@@"
+        math << block
         reset_counters
       end
 

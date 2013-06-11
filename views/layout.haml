@@ -19,8 +19,9 @@
             %input{type: 'hidden', name: 'position', value: problem.id}
             %fieldset
               %legend Problem #{problem.id + 1}
-              %ul.breadcrumbs
-                - problem.nesting.each do |header|
-                  %li
-                    %a{href: '#' + header.name}= header.text
+              - if problem.nesting.any?
+                %ul.breadcrumbs
+                  - problem.nesting.each do |header|
+                    %li
+                      %a{href: '#' + header.name}= header.text
               = problem.render

@@ -1,4 +1,5 @@
 require 'active_support/core_ext/module/delegation'
+
 require 'spirit/render/errors'
 require 'spirit/render/sanitize'
 require 'spirit/render/templates'
@@ -17,7 +18,6 @@ module Spirit
     class HTML < ::Redcarpet::Render::HTML
 
       cattr_accessor(:sanitizer) { Sanitize.new }
-      attr_accessor :headers, :nesting, :problems
       delegate :solutions, to: :problems
 
       # Paragraphs that only contain images are rendered with {Spirit::Render::Image}.
@@ -40,11 +40,7 @@ module Spirit
       end
 
       def block_html(html)
-        if problems.is_marker? html
-          problems.replace_nesting html, nesting
-          ''
-        else html
-        end
+        problems.block_html html, nesting
       end
 
       # Detects block images and renders them as such.
@@ -71,10 +67,10 @@ module Spirit
       # math, and block problems.
       # @param [String] document    markdown document
       def preprocess(document)
-        @math = Math.new(document)
-        document = @math.filter
+        self.math = Math.new(document)
+        document  = math.preprocess
         self.problems = Problems.new(document)
-        document = problems.filter
+        document = problems.preprocess
       end
 
       # Sanitizes the final document.
@@ -85,12 +81,15 @@ module Spirit
           navigation: @nav.render,
           content:  document.force_encoding('utf-8'),
           problems: problems
-        document = @math.replace(document)
-        sanitizer.clean document
+        document = math.postprocess document
+        sanitizer.postprocess document
       end
 
       private
 
+      attr_accessor :headers, :nesting, :problems, :math
+
+      # Maintains the +nesting+ array.
       # @param [Header] h
       def nest(h)
         nesting.pop until nesting.empty? or h.level > nesting.last.level
