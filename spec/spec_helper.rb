@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 require 'rubygems'
 require 'bundler/setup'
 require 'rspec'
@@ -13,18 +12,23 @@ end
 require 'factory_girl'
 require 'faker'
 require 'securerandom'
+require 'tempfile'
 
 module Test
-  ROOT = Pathname.new File.dirname(__FILE__)
+  ROOT = Pathname.new __dir__
 end
 
 $:.unshift Test::ROOT + '..' + 'lib'
 
 require 'spirit'
-Spirit.initialize_logger '/dev/null'
-FactoryGirl.find_definitions
 
 RSpec.configure do |config|
+
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
+
+  config.before :suite do
+    FactoryGirl.find_definitions
+  end
+
 end

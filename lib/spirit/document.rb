@@ -1,4 +1,4 @@
-# ~*~ encoding: utf-8 ~*~
+require 'active_support/core_ext/module/delegation'
 require 'spirit/constants'
 require 'spirit/errors'
 require 'spirit/render'

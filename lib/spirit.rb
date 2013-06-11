@@ -1,4 +1,4 @@
-# ~*~ encoding: utf-8 ~*~
+require 'spirit/version'
 require 'spirit/logger'
 require 'spirit/constants'
 require 'spirit/errors'
@@ -6,17 +6,15 @@ require 'spirit/document'
 require 'spirit/manifest'
 
 module Spirit
-  extend self
 
-  attr_reader :logger
+  mattr_accessor :logger
+  @@logger = Logger.new '/dev/null'
 
-  # Initializes the logger. It takes the same arguments as +Logger::new+.
-  # Invoke this at the beginning if you wish {Spirit} to log to another
-  # location than +STDOUT+.
-  def initialize_logger(output=STDOUT, *args)
-    @logger = Logger.new output, *args
+  # Invoke with args for {Logger} to enable logging.
+  def self.reset_logger(io=STDOUT, *args)
+    self.logger = Logger.new(io, *args)
+    logger.formatter = Logger::Formatter.new
+    logger.info "Spirit v#{VERSION}"
   end
-
-  initialize_logger
 
 end
