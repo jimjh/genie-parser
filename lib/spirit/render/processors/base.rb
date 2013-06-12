@@ -1,4 +1,6 @@
 require 'active_support/core_ext/class/attribute'
+require 'active_support/core_ext/module/delegation'
+require 'spirit/constants'
 
 module Spirit
   module Render

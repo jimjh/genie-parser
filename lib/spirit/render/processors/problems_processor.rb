@@ -10,14 +10,14 @@ module Spirit
         # and are parsed for questions/answers.
         REGEX = /^"""$(.*?)^"""$/m
 
-        MARKER = /<!-- %%(\d+)%% -->/
+        MARKER = /\A<!-- %%(\d+)%% -->\z/
 
         attr_reader :problems, :solutions
         delegate :size, :count, :each, :each_with_index, to: :problems
         process  :preprocess, :filter
         process  :block_html, :replace
 
-        def initialize(renderer, document)
+        def initialize(renderer, *args)
           @renderer  = renderer
           @problems  = []
           @solutions = []

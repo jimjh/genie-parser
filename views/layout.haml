@@ -23,5 +23,5 @@
                 %ul.breadcrumbs
                   - problem.nesting.each do |header|
                     %li
-                      %a{href: '#' + header.name}= header.text
+                      %a{href: '#' + header.name}!= header.text
               != problem.render

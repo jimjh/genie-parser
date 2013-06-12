@@ -2,4 +2,4 @@
 -haml_tag ('h%d' % level).to_sym do
   %a.anchor{name: name, href: '#' + name, 'data-magellan-destination' => name}
     %i.foundicon-paper-clip
-  = text
+  != text

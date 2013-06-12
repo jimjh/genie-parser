@@ -1,15 +1,13 @@
-# ~*~ encoding: utf-8 ~*~
 require 'nokogiri'
 
 module Spirit
-
   module Render
 
     # Renders a block image with a figure number.
     class Image < Template
 
       # <img ...>
-      IMAGE_TAG = 'img'
+      IMAGE_TAG = 'img'.freeze
 
       # Name of template file for rendering block images
       self.template = 'img.haml'
@@ -33,7 +31,7 @@ module Spirit
 
       # Parses the given HTML, or raise {RenderError} if it is invalid.
       def parse_or_raise
-        frag = Nokogiri::HTML::DocumentFragment.parse(@html)
+        frag = Nokogiri::HTML::DocumentFragment.parse(@html.strip)
         if 1 == frag.children.count and
           node = frag.children.first and
           node.is_a? Nokogiri::XML::Element and
@@ -46,5 +44,4 @@ module Spirit
     end
 
   end
-
 end

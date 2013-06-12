@@ -1,11 +1,12 @@
-# ~*~ encoding: utf-8 ~*~
 require 'spec_helper'
 
-describe Spirit::Render::Math do
+describe Spirit::Render::Processors::MathProcessor do
+
+  let(:processor) { Spirit::Render::Processors::MathProcessor }
 
   describe '#filter' do
 
-    let(:filtered)  { Spirit::Render::Math.new(@input).preprocess }
+    let(:filtered)  { processor.new(nil, @input).filter(nil) }
     let(:the_usual) { /here is some @@0@@ and @@1@@/ }
 
     it 'filters inline math with markers' do
@@ -71,7 +72,7 @@ describe Spirit::Render::Math do
 
 end
 
-describe Spirit::Render::Math::SPLIT do
+describe Spirit::Render::Processors::MathProcessor::SPLIT do
 
   it { should match '\begin{x}' }
   it { should match '\end{x}' }

@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 require 'spec_helper'
 
 describe Spirit::Document do
@@ -57,7 +56,7 @@ describe Spirit::Document do
       Spirit::Document.new(input).render.should match(/#{o}/)
     end
 
-    it 'collects problems in the given array' do
+    it 'collects problems' do
       problem  = FactoryGirl.create :short
       input    = %Q["""\n#{problem}\n"""]
       document = Spirit::Document.new(input)

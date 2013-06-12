@@ -4,7 +4,7 @@ module Spirit
 
       class BlockImageProcessor < Base
 
-        process :paragraph, :paragraph
+        process :paragraph, :filter
 
         # Paragraphs that only contain images are rendered with
         # {Spirit::Render::Image}.
@@ -16,7 +16,7 @@ module Spirit
 
         # Detects block images and renders them as such.
         # @return [String] rendered html
-        def paragraph(text)
+        def filter(text)
           case text
           when IMAGE_REGEX then block_image(text)
           else p(text) end
