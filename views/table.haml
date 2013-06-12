@@ -16,7 +16,7 @@
                 - if Spirit::Render::Table.input? cell
                   %input{name: "answer[#{i}][#{j}]", type: 'text'}
                 - else
-                  = cell
+                  != cell
 .row
   .large-2.small-1.columns
     %input.small.button.radius{type: 'submit', value: 'Submit'}

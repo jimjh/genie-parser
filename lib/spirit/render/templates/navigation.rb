@@ -1,4 +1,3 @@
-# ~*~ encoding: utf-8 ~*~
 module Spirit
 
   module Render
@@ -7,7 +6,7 @@ module Spirit
     class Navigation < Template
 
       # HAML template for navigation bar
-      TEMPLATE = 'nav.haml'
+      self.template = 'nav.haml'
 
       # Creates a new navigation bar.
       def initialize

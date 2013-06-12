@@ -23,7 +23,7 @@ module Spirit
     class Table < Problem
 
       # Name of template file for rendering table problems.
-      TEMPLATE = 'table.haml'
+      self.template = 'table.haml'
 
       # Optional headings key.
       HEADINGS = 'headings'

@@ -12,15 +12,11 @@ module Spirit
       IMAGE_TAG = 'img'
 
       # Name of template file for rendering block images
-      TEMPLATE = 'img.haml'
+      self.template = 'img.haml'
 
-      class << self
-
-        # Parses the given text for a block image.
-        def parse(text)
-          Image.new text
-        end
-
+      # Parses the given text for a block image.
+      def self.parse(text)
+        Image.new text
       end
 
       # Creates a new image.

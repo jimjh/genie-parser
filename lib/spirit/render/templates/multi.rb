@@ -22,7 +22,7 @@ module Spirit
       OPTIONS = 'options'
 
       # Name of template file for rendering multiple choice questions.
-      TEMPLATE = 'multi.haml'
+      self.template = 'multi.haml'
 
       # Checks if the given yaml contains a valid MCQ.
       # @return [Boolean] true iff the yaml contains a valid MCQ.

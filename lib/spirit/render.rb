@@ -1,4 +1,3 @@
-require 'pygments'
 require 'haml'
 require 'redcarpet'
 

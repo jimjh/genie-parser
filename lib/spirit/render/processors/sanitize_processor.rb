@@ -75,9 +75,6 @@ module Spirit
         class_attribute :sanitizer
         self.sanitizer = ::Sanitize.new config
 
-        def initialize(*args)
-        end
-
         def clean(document)
           sanitizer.clean document
         end

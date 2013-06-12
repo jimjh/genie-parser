@@ -20,6 +20,11 @@ module Spirit
     no_styles:          true,
   }.freeze
 
+  HAML_CONFIG = {
+    escape_html:        true,
+    format:             :html5,
+  }.freeze
+
   SOLUTION_DIR = Dir.tmpdir.freeze
   SOLUTION_EXT = '.sol'.freeze
 

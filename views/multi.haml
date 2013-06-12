@@ -1,12 +1,12 @@
 -# coding: UTF-8
-%p= question
+%p!= question
 .row.collapse
   .large-10.columns
     -options.each do |value, label|
       %label{for: 'answer'}
         %input.hide{name: 'answer', type: 'radio', value: value}
-          %span.custom.radio
-          = label
+        %span.custom.radio
+        != label
   .large-2.columns
     %input.small.button.expand.radius{type: 'submit', value: 'Submit'}
 

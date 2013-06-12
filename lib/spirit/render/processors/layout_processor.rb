@@ -5,14 +5,14 @@ module Spirit
       # Post-processes a layout in HAML.
       class LayoutProcessor < Base
 
-        TEMPLATE = File.join Spirit::VIEWS, 'layout.haml'
+        TEMPLATE = File.join VIEWS, 'layout.haml'
 
         attr_accessor :engine, :renderer
         process :postprocess, :render
 
         def initialize(renderer, *args)
-          template  = File.read TEMPLATE, escape_html: true, format: :html5
-          @engine   = Haml::Engine.new template
+          template  = File.read TEMPLATE
+          @engine   = Haml::Engine.new template, HAML_CONFIG
           @renderer = renderer
         end
 

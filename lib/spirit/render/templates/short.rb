@@ -13,7 +13,7 @@ module Spirit
     class Short < Problem
 
       # Name of template file for rendering short answer questions.
-      TEMPLATE = 'short.haml'
+      self.template = 'short.haml'
 
       # Checks if the given yaml contains a valid MCQ.
       # @return [Boolean] true iff the yaml contains a valid MCQ.

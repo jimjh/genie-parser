@@ -1,8 +1,8 @@
 -# coding: UTF-8
-= navigation.render
+!= navigation.render
 .row
   .large-6.columns
-    = preserve content
+    != preserve content
   .large-6.columns
     .lesson-problems.panel
       .row
@@ -15,7 +15,7 @@
             %a.last{href: '#', 'data-action' => 'last'} &raquo;
       - problems.each_with_index do |problem, i|
         %div.problem-wrapper{class: i != 0 ? 'hide' : ''}
-          %form.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{problem.id}", method: 'post'}
+          %form.custom.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{problem.id}", method: 'post'}
             %input{type: 'hidden', name: 'position', value: problem.id}
             %fieldset
               %legend Problem #{problem.id + 1}
@@ -24,4 +24,4 @@
                   - problem.nesting.each do |header|
                     %li
                       %a{href: '#' + header.name}= header.text
-              = problem.render
+              != problem.render

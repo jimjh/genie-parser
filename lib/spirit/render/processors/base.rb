@@ -21,6 +21,9 @@ module Spirit
           hooks.keys
         end
 
+        def initialize(*args)
+        end
+
         def invoke_callbacks_for(event, *args)
           hooks[event].each do |h|
             args = public_send(h, *args)

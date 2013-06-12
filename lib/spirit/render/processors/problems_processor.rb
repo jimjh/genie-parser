@@ -3,6 +3,7 @@ module Spirit
     module Processors
 
       # Pre-processes problem markup in YAML.
+      # Dependent on renderer#problems and renderer#nesting.
       class ProblemsProcessor < Base
 
         # Paragraphs that start and end with +"""+ are treated as embedded YAML
