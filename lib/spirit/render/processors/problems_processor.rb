@@ -59,7 +59,8 @@ module Spirit
         # @param  [String] text            candidate YAML markup
         # @return [String] text or marker
         def problem(text)
-          p = Problem.parse(text, problems.size)
+          p = Problem.parse(text)
+          p.id = problems.size
           self.problems  << p
           self.solutions << {digest: p.digest, solution: Marshal.dump(p.answer)}
           Spirit.logger.record :problem, "ID: #{p.id}"

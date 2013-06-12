@@ -1,4 +1,6 @@
+require 'active_support/core_ext/class/attribute'
 require 'spirit/constants'
+
 module Spirit
 
   module Render
@@ -24,7 +26,8 @@ module Spirit
       KEYS = [FORMAT, QUESTION, ANSWER]
 
       # Stateless markdown renderer.
-      MARKDOWN = ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML, MARKDOWN_EXTENSIONS)
+      class_attribute :markdown
+      self.markdown = ::Redcarpet::Markdown.new(::Redcarpet::Render::HTML, MARKDOWN_EXTENSIONS)
 
       class << self
 
@@ -32,12 +35,11 @@ module Spirit
         # does not contain valid YAML or does not contain the format key, raises
         # an {Spirit::Render::RenderError}.
         # @param  [String]  text          embedded yaml
-        # @param  [Fixnum]  id            ID of problem
         # @return [Problem] problem
-        def parse(text, id = 0)
+        def parse(text)
           digest = OpenSSL::Digest::SHA256.digest text
           yaml   = YAML.load text
-          get_instance(yaml, digest, id)
+          get_instance(yaml, digest)
         rescue ::Psych::SyntaxError => e
           raise RenderError, e.message
         end
@@ -50,36 +52,35 @@ module Spirit
         end
 
         # @return [Problem] problem
-        def get_instance(yaml, digest, id = 0)
-          raise RenderError, "Missing 'format' key in given YAML" unless instantiable? yaml
-          klass = Spirit::Render.const_get(yaml[FORMAT].capitalize)
+        def get_instance(hash, digest)
+          raise RenderError, "Missing 'format' key in given YAML" unless instantiable? hash
+          klass = Spirit::Render.const_get(hash[FORMAT].capitalize)
           raise NameError unless klass < Problem
-          klass.new(yaml, digest, id)
+          klass.new(hash, digest)
         rescue NameError
-          raise RenderError, 'Unrecognized format: %p' % yaml[FORMAT]
+          raise RenderError, 'Unrecognized format: %p' % hash[FORMAT]
         end
 
         private
 
-        def instantiable?(yaml)
-          yaml.is_a?(Hash) and yaml.has_key?(FORMAT)
+        def instantiable?(hash)
+          hash.is_a?(Hash) and hash.has_key?(FORMAT)
         end
 
       end
 
-      accessor ID, *KEYS
-      attr_accessor :nesting
+      accessor *KEYS
+      attr_accessor :nesting, :id
       attr_reader   :digest
 
       # Creates a new problem from the given YAML.
       # @param [Hash] yaml          parsed yaml object
       # @param [String] digest      SHA-256 hash of yaml text
       # @param [Fixnum] id          integer ID of question
-      def initialize(yaml, digest, id = 0)
-        @yaml, @digest, @nesting = yaml, digest, []
-        @yaml[ID]      = id
+      def initialize(yaml, digest)
+        @yaml, @digest, @nesting, @id = yaml, digest, [], 0
         raise RenderError.new('Invalid problem.') unless @yaml[QUESTION].is_a? String
-        @yaml[QUESTION] = MARKDOWN.render @yaml[QUESTION]
+        @yaml[QUESTION] = markdown.render @yaml[QUESTION]
       end
 
       # @todo TODO should probably show some error message in the preview,

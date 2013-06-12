@@ -5,6 +5,8 @@ module Spirit
     # Keeps track of document sections and renders a navigation bar.
     class Navigation < Template
 
+      delegate :size, :count, to: :@sections
+
       # HAML template for navigation bar
       self.template = 'nav.haml'
 

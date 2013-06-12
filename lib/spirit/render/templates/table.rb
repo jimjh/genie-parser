@@ -37,7 +37,7 @@ module Spirit
       accessor HEADINGS, GRID
 
       # Ensures that the +headings+ key exists.
-      def initialize(yaml, digest, id = 0)
+      def initialize(yaml, digest)
         yaml[HEADINGS] ||= nil
         super
       end

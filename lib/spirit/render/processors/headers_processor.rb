@@ -25,7 +25,7 @@ module Spirit
 
         private
 
-        attr_accessor :navigation, :headers, :nesting
+        attr_accessor :headers, :navigation, :nesting
 
         # Maintains the +nesting+ array.
         # @param [Header] h
