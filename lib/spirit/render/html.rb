@@ -1,13 +1,11 @@
 require 'active_support/core_ext/module/delegation'
 
 require 'spirit/render/errors'
-require 'spirit/render/sanitize'
 require 'spirit/render/templates'
-require 'spirit/render/math'
-require 'spirit/render/problems'
+require 'spirit/render/processable'
+require 'spirit/render/processors'
 
 module Spirit
-
   module Render
 
     # HTML Renderer for Genie Markup Language, which is just GitHub Flavored
@@ -16,9 +14,15 @@ module Spirit
     # @see Spirit::Tilt::Template
     # @see http://github.github.com/github-flavored-markdown/
     class HTML < ::Redcarpet::Render::HTML
+      include Processable
 
-      cattr_accessor(:sanitizer) { Sanitize.new }
       delegate :solutions, to: :problems
+      attr_accessor :navigation, :problems
+
+      use Processors::SanitizeProcessor
+      use Processors::MathProcessor
+      use Processors::LayoutProcessor
+      use Processors::ProblemsProcessor
 
       # Paragraphs that only contain images are rendered with {Spirit::Render::Image}.
       IMAGE_REGEX = /\A\s*<img[^<>]+>\s*\z/m
@@ -26,9 +30,9 @@ module Spirit
       # Creates a new HTML renderer.
       # @param  [Hash] opts        described in the RedCarpet documentation
       def initialize(opts={})
+        super RENDERER_CONFIG.merge opts
         @nesting = []
-        super RENDERER_CONFIG.dup.merge opts
-        @nav, @headers, @img = Navigation.new, Headers.new, 0
+        @navigation, @headers, @img = Navigation.new, Headers.new, 0
       end
 
       # Pygmentizes code blocks.
@@ -36,11 +40,7 @@ module Spirit
       # @param [String] marker      name of language
       # @return [String] highlighted code
       def block_code(code, marker)
-        Albino.colorize(code, marker || 'text')
-      end
-
-      def block_html(html)
-        problems.block_html html, nesting
+        Pygments.highlight(code, lexer: marker || 'text')
       end
 
       # Detects block images and renders them as such.
@@ -58,36 +58,14 @@ module Spirit
       # @return [String] rendered html
       def header(text, level)
         h = headers.add(text, level+=1)
-        @nav.append(text, h.name) if level == 2
+        navigation.append(text, h.name) if level == 2
         nest h
         h.render
       end
 
-      # Runs a first pass through the document to look for inline math, block
-      # math, and block problems.
-      # @param [String] document    markdown document
-      def preprocess(document)
-        self.math = Math.new(document)
-        document  = math.preprocess
-        self.problems = Problems.new(document)
-        document = problems.preprocess
-      end
-
-      # Sanitizes the final document.
-      # @param [String]  document    html document
-      # @return [String] sanitized document
-      def postprocess(document)
-        document = Layout.new.render \
-          navigation: @nav.render,
-          content:  document.force_encoding('utf-8'),
-          problems: problems
-        document = math.postprocess document
-        sanitizer.postprocess document
-      end
-
       private
 
-      attr_accessor :headers, :nesting, :problems, :math
+      attr_accessor :headers, :nesting
 
       # Maintains the +nesting+ array.
       # @param [Header] h

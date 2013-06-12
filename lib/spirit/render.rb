@@ -1,4 +1,4 @@
-require 'albino'
+require 'pygments'
 require 'haml'
 require 'redcarpet'
 
