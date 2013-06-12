@@ -87,8 +87,7 @@ module Spirit
       #   so that the author doesn't have to read the logs.
       def render(locals={})
         raise RenderError.new('Invalid problem.') unless valid?
-        yaml = @yaml.merge(locals)
-        super yaml
+        super @yaml.merge(locals)
       end
 
       # Retrieves the answer from the given YAML object in a serializable form.

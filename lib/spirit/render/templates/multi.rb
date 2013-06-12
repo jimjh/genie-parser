@@ -6,15 +6,14 @@ module Spirit
     # Renders multiple choice questions marked up in YAML as HTML.
     # @example
     #
-    #     {
-    #       "format": "multi",
-    #       "question": "How tall is Mount Everest?",
-    #       "answer": "A",
-    #       "options": {
-    #         "A": "452 inches",
-    #         "B": "8.85 kilometers"
-    #       }
-    #     }
+    #     """
+    #     format: multi
+    #     question: How tall is Mount Everest?
+    #     answer: A
+    #     options:
+    #       A: 452 inches
+    #       B: 8.85 kilometers
+    #     """
     class Multi < Problem
 
       # Required key in YAML markup. Associated value should be a dictionary of

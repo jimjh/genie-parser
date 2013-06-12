@@ -8,15 +8,17 @@ describe Spirit::Render::Processors::HeadersProcessor do
   let(:text)      { Faker::Lorem.sentence }
   let(:level)     { Random.rand(5) + 1 }
   let(:html)      { processor.header text, level }
-  let(:doc)       { Nokogiri.parse html }
+  let(:doc)       { Nokogiri::HTML::Document.parse html }
   subject { processor }
 
   it 'creates headers' do
-    doc.children.first.text.strip.should eq text
+    headers = doc.css("h#{level + 1}")
+    headers.first.text.strip.should eq text
   end
 
   it 'increases header levels by 1' do
-    doc.children.first.name.should eq "h#{level + 1}"
+    headers = doc.css("h#{level + 1}")
+    headers.first.text.strip.should eq text
   end
 
   it 'adds h1s to the navigation bar' do

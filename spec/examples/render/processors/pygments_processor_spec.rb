@@ -11,14 +11,21 @@ describe Spirit::Render::Processors::PygmentsProcessor do
   }
   subject { processor }
 
+  RSpec::Matchers.define :be_highlighted do
+    match do |html|
+      doc = Nokogiri::HTML::Document.parse html
+      !doc.css('div.highlight pre').empty?
+    end
+  end
+
   it 'highlights the code' do
-    output = processor.highlight_code code, 'ruby'
-    output.should include 'highlight'
+    html = processor.highlight_code code, 'ruby'
+    html.should be_highlighted
   end
 
   it 'defaults to text' do
-    output = processor.highlight_code code, nil
-    output.should include 'highlight'
+    html = processor.highlight_code code, nil
+    html.should be_highlighted
   end
 
 end

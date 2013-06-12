@@ -19,6 +19,7 @@ module Test
 end
 
 $:.unshift Test::ROOT + '..' + 'lib'
+Dir[Test::ROOT + 'shared' + '**' + '*.rb'].each { |f| require f }
 
 require 'spirit'
 
@@ -29,6 +30,7 @@ RSpec.configure do |config|
 
   config.before :suite do
     FactoryGirl.find_definitions
+    Spirit.reset_logger '/dev/null'
   end
 
 end

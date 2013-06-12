@@ -78,7 +78,10 @@ describe Spirit::Render::Problem do
 
   describe '#render' do
     its(:render) { should be_kind_of String }
-    it 's render should match content'
+    it 's render should match content' do
+      html = parse(input).render
+      html.should include YAML.load(input)['question']
+    end
   end
 
 end
