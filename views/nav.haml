@@ -1,5 +1,5 @@
 -# coding: UTF-8
-%dl.lesson-nav.sub-nav{'data-magellan-expedition' => ''}
+%dl.sub-nav{'data-sticky-nav' => 'section[role="lesson"]', 'data-magellan-expedition' => ''}
   -sections.each do |name, heading|
     %dd{'data-magellan-arrival' => name}
       %a{href: '#' + name}!= heading

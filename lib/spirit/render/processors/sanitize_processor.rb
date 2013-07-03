@@ -29,7 +29,7 @@ module Spirit
           'a'   => ['href', 'name', 'data-magellan-destination', 'data-action'],
           'input' => ['data-max-page'],
           'dd'  => ['data-magellan-arrival'],
-          'dl'  => ['data-magellan-expedition'],
+          'dl'  => ['data-magellan-expedition', 'data-sticky-nav'],
           'img' => ['src'],
           :all  => ['abbr', 'accept', 'accept-charset',
                     'accesskey', 'action', 'align', 'alt', 'axis',
