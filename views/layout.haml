@@ -4,17 +4,21 @@
   .large-6.columns
     != preserve content
   .large-6.columns
-    .lesson-problems.panel
+    .lesson-problems.panel{'data-pagination' => '.jqpagination', 'data-current-page' => '1'}
       .row
-        .large-6.large-centered.columns
+        .large-6.push-3.columns
           .jqpagination
             %a.first{href: '#', 'data-action' => 'first'} &laquo;
             %a.previous{href: '#', 'data-action' => 'previous'} &lsaquo;
             %input{type: 'text', readonly: 'readonly', 'data-max-page' => problems.count}
             %a.next{href: '#', 'data-action' => 'next'} &rsaquo;
             %a.last{href: '#', 'data-action' => 'last'} &raquo;
+        .large-3.columns
+          %label
+            %input{type: 'checkbox', checked: 'checked', name: 'pagination_locked_to_text'}
+            Locked to Text
       - problems.each_with_index do |problem, i|
-        %div.problem-wrapper{class: i != 0 ? 'hide' : ''}
+        %div.problem-wrapper{'data-ng-class' => "{ hide: #{i+1} != currentPage }"}
           %form.custom.problem{action: '/answers', 'accept-charset' => 'UTF-8', id: "problem_#{problem.id}", method: 'post'}
             %input{type: 'hidden', name: 'position', value: problem.id}
             %fieldset

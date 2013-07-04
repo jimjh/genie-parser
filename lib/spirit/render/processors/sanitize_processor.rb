@@ -26,8 +26,9 @@ module Spirit
 
         # white-listed attributes
         ATTRIBUTES = {
-          'a'   => ['href', 'name', 'data-magellan-destination', 'data-action'],
+          'a'   => %w[href name data-magellan-destination data-action data-pagination-destination],
           'input' => ['data-max-page'],
+          'div' => ['data-pagination', 'data-current-page'],
           'dd'  => ['data-magellan-arrival'],
           'dl'  => ['data-magellan-expedition', 'data-sticky-nav'],
           'img' => ['src'],
@@ -47,7 +48,7 @@ module Spirit
                     'selected', 'shape', 'size', 'span',
                     'start', 'summary', 'tabindex', 'target',
                     'title', 'type', 'usemap', 'valign', 'value',
-                    'vspace', 'width']
+                    'vspace', 'width', 'data-ng-class']
         }.freeze
 
         # white-listed protocols

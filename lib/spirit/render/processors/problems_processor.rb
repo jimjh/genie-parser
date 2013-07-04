@@ -66,7 +66,7 @@ module Spirit
           Spirit.logger.record :problem, "ID: #{p.id}"
         rescue RenderError
           text
-        else "<!-- %%#{p.id}%% -->"
+        else "<!-- %%#{p.id}%% -->\n\n<a data-pagination-destination='#{p.id + 1}'/>"
         end
 
       end
